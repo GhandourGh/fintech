@@ -1,0 +1,5 @@
+Metric,Value
+AUC,0.6775
+KSStatistic,0.2892
+KSOptimalScore,48.2032
+AccuracyRatio,0.3551

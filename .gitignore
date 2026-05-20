@@ -2,3 +2,17 @@
 *.local
 .env
 .env.*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# IDE
+.claude/
+.vscode/
+.idea/
+
+# Node / frontend build
+fintech-dashboard/node_modules/
+fintech-dashboard/dist/

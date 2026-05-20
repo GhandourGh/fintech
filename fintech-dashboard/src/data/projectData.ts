@@ -1,89 +1,100 @@
-/** Static metrics from MATLAB outputs & Final Report — presentation only, logic unchanged */
+/**
+ * Official metrics from fintech.pdf (final report) — MATLAB outputs / Table 15–18.
+ * Historical segments from DataProjScoreCard.xlsx.
+ */
 
 export const PROJECT_META = {
   title: 'AI in FinTech — Credit Scorecard System',
-  author: 'Maroun Machaalany',
   institution: 'Université Saint-Joseph de Beyrouth (USJ)',
   year: '2025–2026',
   software: 'MATLAB Credit Scorecard Workflow',
+  dataset: 'DataProjScoreCard.xlsx',
   loanAmount: 100_000,
   recoveryRate: 0.6,
   lgd: 0.4,
-  baseRate: 0.03,
-  optimalThreshold: 50.46,
+  /** KS score (optimal cutoff) — Table 13 / §10 */
+  optimalThreshold: 48.2032,
 };
 
+/** validatemodel on full HistoricalData (no train/test split) — Table 13 */
 export const VALIDATION = {
-  trainSize: 350,
-  testSize: 150,
-  holdout: 0.3,
-  auc: 0.5636,
-  accuracy: 0.6133,
-  precision: 0.4615,
-  recall: 0.4444,
-  f1Score: 0.4528,
+  accuracyRatio: 0.3551,
+  auc: 0.6775,
+  ksStatistic: 0.2892,
+  ksOptimalScore: 48.2032,
 };
 
-export const CONFUSION_MATRIX = {
-  tp: 23,
-  tn: 71,
-  fp: 27,
-  fn: 29,
-};
-
-export const ROC_CURVE = [
-  { fpr: 0, tpr: 0 },
-  { fpr: 0.08, tpr: 0.12 },
-  { fpr: 0.16, tpr: 0.22 },
-  { fpr: 0.24, tpr: 0.31 },
-  { fpr: 0.32, tpr: 0.39 },
-  { fpr: 0.4, tpr: 0.46 },
-  { fpr: 0.48, tpr: 0.52 },
-  { fpr: 0.56, tpr: 0.58 },
-  { fpr: 0.64, tpr: 0.64 },
-  { fpr: 0.72, tpr: 0.7 },
-  { fpr: 0.8, tpr: 0.76 },
-  { fpr: 0.88, tpr: 0.84 },
-  { fpr: 1, tpr: 1 },
+export const SCORECARD_POINTS_UNSCALED = [
+  { predictor: 'Age', bin: '[-∞, 38)', points: -0.214 },
+  { predictor: 'Age', bin: '[38, 40)', points: -0.0814 },
+  { predictor: 'Age', bin: '[40, 46)', points: 0.0777 },
+  { predictor: 'Age', bin: '[46, 49)', points: 0.085 },
+  { predictor: 'Age', bin: '[49, Inf)', points: 0.4763 },
+  { predictor: 'ResidentialStatus', bin: 'renter', points: -0.0313 },
+  { predictor: 'ResidentialStatus', bin: 'HomeOwner', points: 0.3711 },
+  { predictor: 'EmploymentStatus', bin: 'Other', points: -0.1686 },
+  { predictor: 'EmploymentStatus', bin: 'Employed', points: 0.4833 },
+  { predictor: 'Income', bin: '[-∞, 28000)', points: -0.4615 },
+  { predictor: 'Income', bin: '[28000, 32000)', points: -0.1528 },
+  { predictor: 'Income', bin: '[32000, 35000)', points: -0.0659 },
+  { predictor: 'Income', bin: '[35000, 41000)', points: 0.1957 },
+  { predictor: 'Income', bin: '[41000, 44000)', points: 0.249 },
+  { predictor: 'Income', bin: '[44000, 50000)', points: 0.4475 },
+  { predictor: 'Income', bin: '[50000, Inf)', points: 0.5893 },
 ];
 
 export const SCORECARD_POINTS = [
-  { predictor: 'Age', bin: '[-Inf, 35)', points: -1.9243 },
-  { predictor: 'Age', bin: '[35, 50)', points: 8.0827 },
-  { predictor: 'Age', bin: '[50, 65)', points: 19.7435 },
-  { predictor: 'Age', bin: '[65, Inf)', points: 34.6426 },
-  { predictor: 'ResidentialStatus', bin: 'renter', points: 5.6376 },
-  { predictor: 'ResidentialStatus', bin: 'HomeOwner', points: 18.3525 },
-  { predictor: 'EmploymentStatus', bin: 'Other', points: 0.7842 },
-  { predictor: 'EmploymentStatus', bin: 'Employed', points: 22.4635 },
-  { predictor: 'Income', bin: '[-Inf, 30000)', points: -4.4974 },
-  { predictor: 'Income', bin: '[30000, 40000)', points: 9.3976 },
-  { predictor: 'Income', bin: '[40000, 50000)', points: 16.4469 },
-  { predictor: 'Income', bin: '[50000, Inf)', points: 24.5414 },
+  { predictor: 'Age', bin: '[-∞, 38)', points: 0.17 },
+  { predictor: 'Age', bin: '[38, 40)', points: 4.92 },
+  { predictor: 'Age', bin: '[40, 46)', points: 10.61 },
+  { predictor: 'Age', bin: '[46, 49)', points: 10.87 },
+  { predictor: 'Age', bin: '[49, Inf)', points: 24.87 },
+  { predictor: 'ResidentialStatus', bin: 'renter', points: 6.71 },
+  { predictor: 'ResidentialStatus', bin: 'HomeOwner', points: 21.1 },
+  { predictor: 'EmploymentStatus', bin: 'Other', points: 1.8 },
+  { predictor: 'EmploymentStatus', bin: 'Employed', points: 25.12 },
+  { predictor: 'Income', bin: '[-∞, 28000)', points: -8.68 },
+  { predictor: 'Income', bin: '[28000, 32000)', points: 2.36 },
+  { predictor: 'Income', bin: '[32000, 35000)', points: 5.47 },
+  { predictor: 'Income', bin: '[35000, 41000)', points: 14.83 },
+  { predictor: 'Income', bin: '[41000, 44000)', points: 16.74 },
+  { predictor: 'Income', bin: '[44000, 50000)', points: 23.84 },
+  { predictor: 'Income', bin: '[50000, Inf)', points: 28.91 },
 ];
 
 export const WOE_DATA = {
   Age: [
-    { bin: '< 35', woe: -0.82, count: 125 },
-    { bin: '35–50', woe: 0.18, count: 157 },
-    { bin: '50–65', woe: 0.91, count: 126 },
-    { bin: '65+', woe: 1.38, count: 92 },
+    { bin: '[−∞, 38)', woe: -0.5754, count: 100, good: 50, bad: 50 },
+    { bin: '[38, 40)', woe: -0.3618, count: 47, good: 26, bad: 21 },
+    { bin: '[40, 46)', woe: -0.1054, count: 104, good: 64, bad: 40 },
+    { bin: '[46, 49)', woe: -0.0935, count: 55, good: 34, bad: 21 },
+    { bin: '[49, +∞]', woe: 0.537, count: 194, good: 146, bad: 48 },
   ],
   Income: [
-    { bin: '< $30k', woe: -1.12, count: 75 },
-    { bin: '$30–40k', woe: 0.24, count: 140 },
-    { bin: '$40–50k', woe: 0.74, count: 127 },
-    { bin: '$50k+', woe: 1.28, count: 158 },
+    { bin: '[−∞, 28k)', woe: -0.9808, count: 50, good: 20, bad: 30 },
+    { bin: '$28–32k', woe: -0.4801, count: 42, good: 22, bad: 20 },
+    { bin: '$32–35k', woe: -0.339, count: 68, good: 38, bad: 30 },
+    { bin: '$35–41k', woe: 0.0853, count: 138, good: 91, bad: 47 },
+    { bin: '$41–44k', woe: 0.1719, count: 56, good: 38, bad: 18 },
+    { bin: '$44–50k', woe: 0.4938, count: 90, good: 67, bad: 23 },
+    { bin: '$50k+', woe: 0.7239, count: 56, good: 44, bad: 12 },
   ],
   ResidentialStatus: [
-    { bin: 'renter', woe: -0.28, count: 269 },
-    { bin: 'HomeOwner', woe: 0.94, count: 231 },
+    { bin: 'renter', woe: -0.1789, count: 276, good: 165, bad: 111 },
+    { bin: 'HomeOwner', woe: 0.234, count: 224, good: 155, bad: 69 },
   ],
   EmploymentStatus: [
-    { bin: 'Other', woe: -0.19, count: 241 },
-    { bin: 'Employed', woe: 1.15, count: 259 },
+    { bin: 'Other', woe: -0.3251, count: 249, good: 140, bad: 109 },
+    { bin: 'Employed', woe: 0.3549, count: 251, good: 180, bad: 71 },
   ],
 };
+
+export const PREDICTOR_IV = [
+  { predictor: 'Income', iv: 0.2355, strength: 'Strong' },
+  { predictor: 'Age', iv: 0.1879, strength: 'Medium' },
+  { predictor: 'EmploymentStatus', iv: 0.1143, strength: 'Medium' },
+  { predictor: 'ResidentialStatus', iv: 0.0417, strength: 'Weak' },
+];
 
 export type PortfolioClient = {
   id: number;
@@ -93,45 +104,36 @@ export type PortfolioClient = {
   riskBand: 'Low Risk' | 'Medium Risk' | 'High Risk';
   expectedLoss: number;
   minRate: number;
-  age?: number;
-  income?: number;
-  residential?: string;
-  employment?: string;
+  annualInterest: number;
+  age: number;
+  income: number;
+  residential: string;
+  employment: string;
 };
 
+/** Table 15 — portfolio_results.csv (fintech.pdf) */
 export const PORTFOLIO_CLIENTS: PortfolioClient[] = [
-  { id: 6, score: 91.91, pd: 0.1178, decision: 'Accepted', riskBand: 'Low Risk', expectedLoss: 4711.63, minRate: 7.71, age: 77, income: 49000, residential: 'HomeOwner', employment: 'Employed' },
-  { id: 1, score: 87.29, pd: 0.1332, decision: 'Accepted', riskBand: 'Low Risk', expectedLoss: 5328.89, minRate: 8.33, age: 30, income: 21000, residential: 'renter', employment: 'Other' },
-  { id: 4, score: 85.1, pd: 0.1411, decision: 'Accepted', riskBand: 'Low Risk', expectedLoss: 5643.78, minRate: 8.64, age: 50, income: 54000, residential: 'HomeOwner', employment: 'Employed' },
-  { id: 5, score: 85.1, pd: 0.1411, decision: 'Accepted', riskBand: 'Low Risk', expectedLoss: 5643.78, minRate: 8.64, age: 60, income: 54000, residential: 'HomeOwner', employment: 'Employed' },
-  { id: 7, score: 72.39, pd: 0.1948, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 7793.43, minRate: 10.79, age: 63, income: 51300, residential: 'renter', employment: 'Employed' },
-  { id: 9, score: 65.35, pd: 0.2307, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 9227.62, minRate: 12.23, age: 38, income: 41000, residential: 'HomeOwner', employment: 'Employed' },
-  { id: 2, score: 63.43, pd: 0.2412, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 9647.69, minRate: 12.65, age: 22, income: 53000, residential: 'HomeOwner', employment: 'Employed' },
-  { id: 12, score: 63.43, pd: 0.2412, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 9647.69, minRate: 12.65, age: 25, income: 53800, residential: 'HomeOwner', employment: 'Employed' },
-  { id: 13, score: 63.43, pd: 0.2412, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 9647.69, minRate: 12.65, age: 32, income: 66500, residential: 'HomeOwner', employment: 'Employed' },
-  { id: 17, score: 60.73, pd: 0.2566, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 10264.41, minRate: 13.26, age: 39, income: 68500, residential: 'renter', employment: 'Employed' },
-  { id: 19, score: 51.76, pd: 0.312, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 12481.8, minRate: 15.48, age: 40, income: 66000, residential: 'HomeOwner', employment: 'Other' },
-  { id: 10, score: 50.71, pd: 0.319, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 12759.2, minRate: 15.76, age: 57, income: 68700, residential: 'renter', employment: 'Other' },
-  { id: 14, score: 50.46, pd: 0.3206, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 12824.07, minRate: 15.82, age: 66, income: 31200, residential: 'renter', employment: 'Other' },
-  { id: 8, score: 42.62, pd: 0.3747, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 14986.84, minRate: 17.99, age: 29, income: 44000, residential: 'renter', employment: 'Employed' },
-  { id: 16, score: 42.61, pd: 0.3748, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 14990.13, minRate: 17.99, age: 63, income: 45400, residential: 'renter', employment: 'Other' },
-  { id: 3, score: 35.56, pd: 0.4263, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 17050.34, minRate: 20.05, age: 55, income: 30000, residential: 'renter', employment: 'Other' },
-  { id: 11, score: 34.38, pd: 0.4351, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 17402.91, minRate: 20.4, age: 59, income: 23500, residential: 'HomeOwner', employment: 'Other' },
-  { id: 20, score: 21.67, pd: 0.5315, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 21259.89, minRate: 24.26, age: 63, income: 22500, residential: 'renter', employment: 'Other' },
-  { id: 15, score: 10.01, pd: 0.6181, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 24722.98, minRate: 27.72, age: 38, income: 23000, residential: 'renter', employment: 'Other' },
-  { id: 18, score: 0, pd: 0.687, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 27480.86, minRate: 30.48, age: 68, income: 64700, residential: 'renter', employment: 'Employed' },
+  { id: 4, score: 100, pd: 0.1279, decision: 'Accepted', riskBand: 'Low Risk', expectedLoss: 5114, minRate: 5.11, annualInterest: 5114, age: 50, income: 54000, residential: 'HomeOwner', employment: 'Employed' },
+  { id: 5, score: 100, pd: 0.1279, decision: 'Accepted', riskBand: 'Low Risk', expectedLoss: 5114, minRate: 5.11, annualInterest: 5114, age: 60, income: 54000, residential: 'HomeOwner', employment: 'Employed' },
+  { id: 6, score: 94.9267, pd: 0.1445, decision: 'Accepted', riskBand: 'Low Risk', expectedLoss: 5781, minRate: 5.78, annualInterest: 5781, age: 77, income: 49000, residential: 'HomeOwner', employment: 'Employed' },
+  { id: 7, score: 85.603, pd: 0.1798, decision: 'Accepted', riskBand: 'Low Risk', expectedLoss: 7193, minRate: 7.19, annualInterest: 7193, age: 63, income: 51300, residential: 'renter', employment: 'Employed' },
+  { id: 18, score: 85.603, pd: 0.1798, decision: 'Accepted', riskBand: 'Low Risk', expectedLoss: 7193, minRate: 7.19, annualInterest: 7193, age: 68, income: 64700, residential: 'renter', employment: 'Employed' },
+  { id: 2, score: 75.3057, pd: 0.2262, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 9049, minRate: 9.05, annualInterest: 9049, age: 22, income: 53000, residential: 'HomeOwner', employment: 'Employed' },
+  { id: 12, score: 75.3057, pd: 0.2262, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 9049, minRate: 9.05, annualInterest: 9049, age: 25, income: 53800, residential: 'HomeOwner', employment: 'Employed' },
+  { id: 13, score: 75.3057, pd: 0.2262, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 9049, minRate: 9.05, annualInterest: 9049, age: 32, income: 66500, residential: 'HomeOwner', employment: 'Employed' },
+  { id: 9, score: 67.8739, pd: 0.2646, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 10586, minRate: 10.59, annualInterest: 10586, age: 38, income: 41000, residential: 'HomeOwner', employment: 'Employed' },
+  { id: 17, score: 65.6499, pd: 0.2769, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 11077, minRate: 11.08, annualInterest: 11077, age: 39, income: 68500, residential: 'renter', employment: 'Employed' },
+  { id: 19, score: 62.4199, pd: 0.2954, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 11814, minRate: 11.81, annualInterest: 11814, age: 40, income: 66000, residential: 'HomeOwner', employment: 'Other' },
+  { id: 10, score: 62.2836, pd: 0.2962, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 11846, minRate: 11.85, annualInterest: 11846, age: 57, income: 68700, residential: 'renter', employment: 'Other' },
+  { id: 16, score: 57.2103, pd: 0.3265, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 13062, minRate: 13.06, annualInterest: 13062, age: 63, income: 45400, residential: 'renter', employment: 'Other' },
+  { id: 8, score: 55.8354, pd: 0.335, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 13402.63, minRate: 13.4, annualInterest: 13402, age: 29, income: 44000, residential: 'renter', employment: 'Employed' },
+  { id: 11, score: 39.0913, pd: 0.4459, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 17835, minRate: 17.83, annualInterest: 17835, age: 59, income: 23500, residential: 'HomeOwner', employment: 'Other' },
+  { id: 3, score: 35.7363, pd: 0.4691, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 18765, minRate: 18.77, annualInterest: 18765, age: 55, income: 30000, residential: 'renter', employment: 'Other' },
+  { id: 14, score: 35.7363, pd: 0.4691, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 18765, minRate: 18.77, annualInterest: 18765, age: 66, income: 31200, residential: 'renter', employment: 'Other' },
+  { id: 20, score: 24.6943, pd: 0.5461, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 21845, minRate: 21.85, annualInterest: 21845, age: 63, income: 22500, residential: 'renter', employment: 'Other' },
+  { id: 15, score: 4.7411, pd: 0.6776, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 27104, minRate: 27.1, annualInterest: 27104, age: 38, income: 23000, residential: 'renter', employment: 'Other' },
+  { id: 1, score: 0, pd: 0.7059, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 28234, minRate: 28.23, annualInterest: 28234, age: 30, income: 21000, residential: 'renter', employment: 'Other' },
 ];
-
-export const PORTFOLIO_SUMMARY = {
-  totalClients: 20,
-  accepted: 13,
-  rejected: 7,
-  acceptedExposure: 1_300_000,
-  acceptedExpectedLoss: 115_621.68,
-  acceptedAvgPd: 0.2223,
-  acceptedAvgRate: 11.89,
-  riskBands: { 'Low Risk': 4, 'Medium Risk': 9, 'High Risk': 7 },
-};
 
 export const HISTORICAL = {
   count: 500,
@@ -139,21 +141,21 @@ export const HISTORICAL = {
   goodCount: 320,
   badCount: 180,
   defaultDistribution: { good: 320, bad: 180 },
-  ageDefaultRate: { '<35': 0.48, '35-50': 0.382, '50-65': 0.2857, '65+': 0.1111 },
+  ageDefaultRate: { '<35': 0.5, '35-50': 0.3916, '50-65': 0.2781, '65+': 0.1667 },
   residentialDefaultRate: { HomeOwner: 0.308, renter: 0.4022 },
   employmentDefaultRate: { Employed: 0.2829, Other: 0.4378 },
-  incomeDefaultRate: { '<30k': 0.5467, '30-40k': 0.3857, '40-50k': 0.283, '50k+': 0.186 },
+  incomeDefaultRate: { '<30k': 0.5672, '30-40k': 0.3821, '40-50k': 0.297, '50k+': 0.2143 },
 };
 
 export const METHODOLOGY_STEPS = [
-  { step: 1, title: 'Data Loading', desc: 'HistoricalData & ActualPortfolioData from Excel' },
-  { step: 2, title: 'Train/Test Split', desc: '70/30 hold-out validation (350 / 150)' },
-  { step: 3, title: 'Autobinning & WOE', desc: 'creditscorecard + plotbins + bininfo' },
-  { step: 4, title: 'Manual Bin Refinement', desc: 'Age [35,50,65] · Income [30k,40k,50k]' },
-  { step: 5, title: 'Logistic Regression', desc: 'fitmodel on WOE-transformed features' },
-  { step: 6, title: 'Score Scaling', desc: 'formatpoints WorstAndBestScores [0, 100]' },
-  { step: 7, title: 'Threshold Optimization', desc: 'Maximize TPR + TNR on training scores' },
-  { step: 8, title: 'Portfolio Scoring', desc: 'score · probdefault · accept/reject' },
-  { step: 9, title: 'Expected Loss', desc: 'EL = PD × LGD × Exposure (60% recovery)' },
-  { step: 10, title: 'Risk-Based Pricing', desc: 'Min rate = base 3% + PD × LGD' },
+  { step: 1, title: 'Data Loading', desc: 'HistoricalData (500) & ActualPortfolioData (20) from Excel' },
+  { step: 2, title: 'Scorecard Setup', desc: 'creditscorecard — train on all 500 historical clients (no out-of-bag split)' },
+  { step: 3, title: 'Autobinning & WOE', desc: 'autobinning + bininfo + plotbins per predictor' },
+  { step: 4, title: 'Logistic Regression', desc: 'fitmodel on WOE — all four predictors retained' },
+  { step: 5, title: 'Score Scaling', desc: 'formatpoints WorstAndBestScores [0, 100]' },
+  { step: 6, title: 'ROC Validation', desc: 'validatemodel on HistoricalData — AUC 0.6775, KS 0.2892' },
+  { step: 7, title: 'Portfolio Scoring', desc: 'score + probdefault on 20 applicants' },
+  { step: 8, title: 'Accept / Reject', desc: 'Accept if Score ≥ 48.2032 (KS optimal cutoff)' },
+  { step: 9, title: 'Expected Loss', desc: 'EL = PD × LGD × EAD — recovery 60%, LGD 40%' },
+  { step: 10, title: 'Risk Pricing', desc: 'rmin = PD × LGD (no base rate per final report)' },
 ];

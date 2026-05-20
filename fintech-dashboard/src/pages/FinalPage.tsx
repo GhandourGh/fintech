@@ -2,7 +2,8 @@ import { motion } from 'framer-motion';
 import { PageHeader } from '../components/ui/PageHeader';
 import { GlassCard } from '../components/ui/GlassCard';
 import { InfoTip } from '../components/ui/InfoTip';
-import { PORTFOLIO_SUMMARY, PROJECT_META, PORTFOLIO_CLIENTS } from '../data/projectData';
+import { PROJECT_META, PORTFOLIO_CLIENTS } from '../data/projectData';
+import { PORTFOLIO_SUMMARY } from '../data/portfolioMetrics';
 import { fmtCurrency, fmtPct } from '../utils/format';
 import { CheckCircle2, XCircle } from 'lucide-react';
 
@@ -36,7 +37,7 @@ export function FinalPage() {
         <div className="grid sm:grid-cols-3 gap-6 mt-8">
           {[
             ['Avg PD', fmtPct(PORTFOLIO_SUMMARY.acceptedAvgPd)],
-            ['Avg Min Rate', `${PORTFOLIO_SUMMARY.acceptedAvgRate}%`],
+            ['Avg Min Rate', `${PORTFOLIO_SUMMARY.acceptedAvgRate.toFixed(2)}%`],
             ['Rejected', String(PORTFOLIO_SUMMARY.rejected)],
           ].map(([l, v]) => (
             <div key={l}>
@@ -81,7 +82,7 @@ export function FinalPage() {
         </GlassCard>
       </motion.div>
       <p className="text-center text-xs text-[var(--text-muted)] mt-10">
-        {PROJECT_META.author} · {PROJECT_META.institution} · {PROJECT_META.year} · MATLAB Credit Scorecard Workflow
+        {PROJECT_META.institution} · {PROJECT_META.year} · {PROJECT_META.software}
       </p>
     </div>
   );

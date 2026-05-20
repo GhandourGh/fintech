@@ -17,6 +17,7 @@ const LINKS = [
   ['/test', 'Test'],
   ['/performance', 'Performance'],
   ['/final', 'Final'],
+  ['/outputs/matlab', 'Charts'],
 ] as const;
 
 export function MobileNav() {

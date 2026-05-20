@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { DashboardLayout } from './components/layout/DashboardLayout';
 import { OverviewPage } from './pages/OverviewPage';
@@ -13,12 +13,19 @@ import { ExplorerPage } from './pages/ExplorerPage';
 import { ClientTestPage } from './pages/ClientTestPage';
 import { PerformancePage } from './pages/PerformancePage';
 import { FinalPage } from './pages/FinalPage';
-
+import { OutputsLayout } from './components/layout/OutputsLayout';
+import { MatlabOutputsPage } from './pages/outputs/MatlabOutputsPage';
+import { ExcelOutputsPage } from './pages/outputs/ExcelOutputsPage';
 export default function App() {
   return (
     <ThemeProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/outputs" element={<OutputsLayout />}>
+            <Route index element={<Navigate to="matlab" replace />} />
+            <Route path="matlab" element={<MatlabOutputsPage />} />
+            <Route path="excel" element={<ExcelOutputsPage />} />
+          </Route>
           <Route element={<DashboardLayout />}>
             <Route index element={<OverviewPage />} />
             <Route path="scorecard" element={<ScorecardPage />} />

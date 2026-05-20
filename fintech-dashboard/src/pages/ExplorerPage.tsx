@@ -97,7 +97,7 @@ export function ExplorerPage() {
                 ['PD (Model)', fmtPct(client.pd), 'probdefault()'],
                 ['Risk Band', client.riskBand, 'Segmentation'],
                 ['Expected Loss', fmtCurrency(client.expectedLoss), 'PD × LGD × $100k'],
-                ['Min Interest Rate', `${client.minRate.toFixed(2)}%`, 'base + PD × LGD'],
+                ['Min Interest Rate', `${client.minRate.toFixed(2)}%`, 'PD × LGD'],
               ].map(([label, val, sub]) => (
                 <div key={label} className="p-5 rounded-2xl border border-[var(--border)] bg-[var(--bg-primary)]/40">
                   <p className="text-xs uppercase tracking-wider text-[var(--text-muted)]">{label}</p>

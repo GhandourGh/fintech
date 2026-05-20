@@ -1,0 +1,126 @@
+{
+  "generatedAt": "2026-05-21T01:04:07.785555",
+  "sourceFiles": {
+    "matlab": "FinTech_Scorecard_Project.m",
+    "excel": "DataProjScoreCard.xlsx"
+  },
+  "matlab": [
+    {
+      "id": "default_distribution",
+      "file": "default_distribution.png",
+      "title": "Default Distribution in HistoricalData"
+    },
+    {
+      "id": "woe_age",
+      "file": "woe_age.png",
+      "title": "WOE & bins \u2014 Age"
+    },
+    {
+      "id": "woe_income",
+      "file": "woe_income.png",
+      "title": "WOE & bins \u2014 Income"
+    },
+    {
+      "id": "woe_residentialstatus",
+      "file": "woe_residentialstatus.png",
+      "title": "WOE & bins \u2014 ResidentialStatus"
+    },
+    {
+      "id": "woe_employmentstatus",
+      "file": "woe_employmentstatus.png",
+      "title": "WOE & bins \u2014 EmploymentStatus"
+    },
+    {
+      "id": "roc_curve",
+      "file": "roc_curve.png",
+      "title": "ROC Curve (validatemodel)"
+    },
+    {
+      "id": "scores_vs_cutoff",
+      "file": "scores_vs_cutoff.png",
+      "title": "Client Scores vs Optimal KS Cutoff"
+    },
+    {
+      "id": "pd_per_client",
+      "file": "pd_per_client.png",
+      "title": "Predicted Probability of Default per Client"
+    },
+    {
+      "id": "expected_loss_per_client",
+      "file": "expected_loss_per_client.png",
+      "title": "Expected Loss per Client ($)"
+    },
+    {
+      "id": "min_rate_per_client",
+      "file": "min_rate_per_client.png",
+      "title": "Minimum Break-even Interest Rate per Client (%)"
+    },
+    {
+      "id": "score_vs_pd",
+      "file": "score_vs_pd.png",
+      "title": "Score vs PD"
+    },
+    {
+      "id": "accept_reject",
+      "file": "accept_reject.png",
+      "title": "Accepted vs Rejected Clients"
+    },
+    {
+      "id": "risk_bands",
+      "file": "risk_bands.png",
+      "title": "Portfolio Risk Segmentation"
+    }
+  ],
+  "excel": [
+    {
+      "id": "historical_default_distribution",
+      "file": "historical_default_distribution.png",
+      "title": "HistoricalData \u2014 Default distribution"
+    },
+    {
+      "id": "age_distribution",
+      "file": "age_distribution.png",
+      "title": "Age distribution (HistoricalData)"
+    },
+    {
+      "id": "income_distribution",
+      "file": "income_distribution.png",
+      "title": "Income distribution (HistoricalData)"
+    },
+    {
+      "id": "default_rate_by_age",
+      "file": "default_rate_by_age.png",
+      "title": "Default rate by age band"
+    },
+    {
+      "id": "default_rate_residential",
+      "file": "default_rate_residential.png",
+      "title": "Default rate by residential status"
+    },
+    {
+      "id": "default_rate_employment",
+      "file": "default_rate_employment.png",
+      "title": "Default rate by employment status"
+    },
+    {
+      "id": "default_rate_by_income",
+      "file": "default_rate_by_income.png",
+      "title": "Default rate by income band"
+    },
+    {
+      "id": "portfolio_pd_excel",
+      "file": "portfolio_pd_excel.png",
+      "title": "Portfolio PD (Excel sheet)"
+    },
+    {
+      "id": "portfolio_el_excel",
+      "file": "portfolio_el_excel.png",
+      "title": "Portfolio EL (Excel sheet)"
+    },
+    {
+      "id": "age_vs_default_scatter",
+      "file": "age_vs_default_scatter.png",
+      "title": "Age vs Default scatter"
+    }
+  ]
+}

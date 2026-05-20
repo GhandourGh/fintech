@@ -2,14 +2,16 @@ import { PageHeader } from '../components/ui/PageHeader';
 import { GlassCard } from '../components/ui/GlassCard';
 import { MetricCard } from '../components/ui/MetricCard';
 import { SectionHeading } from '../components/ui/SectionHeading';
-import { PORTFOLIO_CLIENTS, PORTFOLIO_SUMMARY, PROJECT_META } from '../data/projectData';
+import { PROJECT_META } from '../data/projectData';
+import { PORTFOLIO_SUMMARY, getAcceptedClients } from '../data/portfolioMetrics';
 import { fmtCurrency, fmtPct } from '../utils/format';
 import { DollarSign, ShieldAlert, PieChart as PieIcon } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { CHART, tooltipStyle } from '../components/charts/chartTheme';
 
-const accepted = PORTFOLIO_CLIENTS.filter((c) => c.decision === 'Accepted');
+const accepted = getAcceptedClients();
 const elChart = accepted.map((c) => ({ id: `C${c.id}`, el: c.expectedLoss }));
+const elFromChart = accepted.reduce((s, c) => s + c.expectedLoss, 0);
 
 export function ExpectedLossPage() {
   return (
@@ -26,7 +28,11 @@ export function ExpectedLossPage() {
         <MetricCard icon={PieIcon} label="Accepted Exposure" value={fmtCurrency(PORTFOLIO_SUMMARY.acceptedExposure)} delay={0.1} infoId="metric.exposure" />
       </div>
       <GlassCard>
-        <SectionHeading title="Expected Loss per Accepted Client" infoId="section.elChart" subtitle="ExpectedLoss = PD_Model × LGD × LoanAmount" />
+        <SectionHeading
+          title="Expected Loss per Accepted Client"
+          infoId="section.elChart"
+          subtitle={`ExpectedLoss = PD_Model × LGD × $100,000 · Sum of bars = ${fmtCurrency(elFromChart)}`}
+        />
         <ResponsiveContainer width="100%" height={340}>
           <BarChart data={elChart}>
             <XAxis dataKey="id" tick={{ fill: CHART.text, fontSize: 10 }} />

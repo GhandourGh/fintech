@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import {
   LayoutDashboard, CreditCard, BarChart3, LineChart, Briefcase, UserCheck,
   DollarSign, Percent, Search, Award, CheckCircle2, Moon, Sun, Shield, FlaskConical,
+  Images,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useTheme } from '../../context/ThemeContext';
@@ -21,6 +22,7 @@ const NAV = [
   { to: '/test', icon: FlaskConical, label: 'Live Client Test' },
   { to: '/performance', icon: Award, label: 'Model Performance' },
   { to: '/final', icon: CheckCircle2, label: 'Final Decision' },
+  { to: '/outputs/matlab', icon: Images, label: 'MATLAB & Excel Charts' },
 ];
 
 export function Sidebar() {

@@ -18,9 +18,9 @@ import {
   PROJECT_META,
   HISTORICAL,
   VALIDATION,
-  PORTFOLIO_SUMMARY,
   METHODOLOGY_STEPS,
 } from '../data/projectData';
+import { PORTFOLIO_SUMMARY } from '../data/portfolioMetrics';
 import { fmtCurrency, fmtPct } from '../utils/format';
 import {
   PieChart,
@@ -52,7 +52,7 @@ export function OverviewPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
         <MetricCard delay={0} icon={Database} label="Historical Records" value="500" sub="Training & validation dataset" accent="teal" infoId="metric.historicalRecords" />
-        <MetricCard delay={0.05} icon={Target} label="Test AUC" value={VALIDATION.auc.toFixed(4)} sub="70/30 hold-out validation" accent="gold" infoId="metric.testAuc" />
+        <MetricCard delay={0.05} icon={Target} label="AUC" value={VALIDATION.auc.toFixed(4)} sub="validatemodel · HistoricalData (n=500)" accent="gold" infoId="metric.testAuc" />
         <MetricCard delay={0.1} icon={Users} label="Portfolio Clients" value="20" sub={`${PORTFOLIO_SUMMARY.accepted} accepted · ${PORTFOLIO_SUMMARY.rejected} rejected`} accent="teal" infoId="metric.portfolioClients" />
         <MetricCard delay={0.15} icon={TrendingUp} label="Accepted Exposure" value={fmtCurrency(PORTFOLIO_SUMMARY.acceptedExposure)} sub={`EL: ${fmtCurrency(PORTFOLIO_SUMMARY.acceptedExpectedLoss)}`} accent="gold" infoId="metric.acceptedExposure" />
       </div>
@@ -102,8 +102,8 @@ export function OverviewPage() {
               ['Loan amount', fmtCurrency(PROJECT_META.loanAmount)],
               ['Recovery rate', fmtPct(PROJECT_META.recoveryRate)],
               ['LGD', fmtPct(PROJECT_META.lgd)],
-              ['Base rate', fmtPct(PROJECT_META.baseRate)],
-              ['Score threshold', PROJECT_META.optimalThreshold.toString()],
+              ['KS optimal cutoff', PROJECT_META.optimalThreshold.toFixed(4)],
+              ['Pricing formula', 'rmin = PD × LGD'],
               ['Score range', '0 – 100'],
             ].map(([k, v]) => (
               <div key={k} className="flex justify-between border-b border-[var(--border)] pb-2 last:border-0">
@@ -141,22 +141,75 @@ export function OverviewPage() {
         </div>
       </GlassCard>
 
-      <GlassCard delay={0.2}>
-        <SectionHeading title="Default Rate by Income Band" infoId="section.incomeDefault" />
-        <ResponsiveContainer width="100%" height={220}>
-          <BarChart
-            data={Object.entries(HISTORICAL.incomeDefaultRate).map(([band, rate]) => ({
-              band,
-              rate: rate * 100,
-            }))}
-          >
-            <XAxis dataKey="band" tick={{ fill: CHART.text, fontSize: 11 }} />
-            <YAxis tick={{ fill: CHART.text, fontSize: 11 }} unit="%" />
-            <Tooltip contentStyle={tooltipStyle} formatter={(v) => [`${Number(v).toFixed(1)}%`, 'Default rate']} />
-            <Bar dataKey="rate" fill={CHART.teal} radius={[6, 6, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </GlassCard>
+      <div className="grid sm:grid-cols-2 gap-6 mb-6">
+        <GlassCard delay={0.2}>
+          <SectionHeading title="Default Rate by Income Band" infoId="section.incomeDefault" />
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart
+              data={Object.entries(HISTORICAL.incomeDefaultRate).map(([band, rate]) => ({
+                band,
+                rate: rate * 100,
+              }))}
+            >
+              <XAxis dataKey="band" tick={{ fill: CHART.text, fontSize: 11 }} />
+              <YAxis tick={{ fill: CHART.text, fontSize: 11 }} unit="%" domain={[0, 65]} />
+              <Tooltip contentStyle={tooltipStyle} formatter={(v) => [`${Number(v).toFixed(1)}%`, 'Default rate']} />
+              <Bar dataKey="rate" fill={CHART.teal} radius={[6, 6, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </GlassCard>
+
+        <GlassCard delay={0.25}>
+          <SectionHeading title="Default Rate by Age Group" infoId="section.incomeDefault" />
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart
+              data={Object.entries(HISTORICAL.ageDefaultRate).map(([band, rate]) => ({
+                band,
+                rate: rate * 100,
+              }))}
+            >
+              <XAxis dataKey="band" tick={{ fill: CHART.text, fontSize: 11 }} />
+              <YAxis tick={{ fill: CHART.text, fontSize: 11 }} unit="%" domain={[0, 65]} />
+              <Tooltip contentStyle={tooltipStyle} formatter={(v) => [`${Number(v).toFixed(1)}%`, 'Default rate']} />
+              <Bar dataKey="rate" fill={CHART.gold} radius={[6, 6, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </GlassCard>
+
+        <GlassCard delay={0.3}>
+          <SectionHeading title="Default Rate by Residential Status" infoId="section.incomeDefault" />
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart
+              data={Object.entries(HISTORICAL.residentialDefaultRate).map(([band, rate]) => ({
+                band,
+                rate: rate * 100,
+              }))}
+            >
+              <XAxis dataKey="band" tick={{ fill: CHART.text, fontSize: 11 }} />
+              <YAxis tick={{ fill: CHART.text, fontSize: 11 }} unit="%" domain={[0, 55]} />
+              <Tooltip contentStyle={tooltipStyle} formatter={(v) => [`${Number(v).toFixed(1)}%`, 'Default rate']} />
+              <Bar dataKey="rate" fill={CHART.low} radius={[6, 6, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </GlassCard>
+
+        <GlassCard delay={0.35}>
+          <SectionHeading title="Default Rate by Employment Status" infoId="section.incomeDefault" />
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart
+              data={Object.entries(HISTORICAL.employmentDefaultRate).map(([band, rate]) => ({
+                band,
+                rate: rate * 100,
+              }))}
+            >
+              <XAxis dataKey="band" tick={{ fill: CHART.text, fontSize: 11 }} />
+              <YAxis tick={{ fill: CHART.text, fontSize: 11 }} unit="%" domain={[0, 55]} />
+              <Tooltip contentStyle={tooltipStyle} formatter={(v) => [`${Number(v).toFixed(1)}%`, 'Default rate']} />
+              <Bar dataKey="rate" fill={CHART.high} radius={[6, 6, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </GlassCard>
+      </div>
 
       <motion.div
         className="mt-8 flex flex-wrap gap-3"

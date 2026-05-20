@@ -42,7 +42,7 @@ export function WoePage() {
         <SectionHeading
           title={`WOE — ${active}`}
           infoId="section.woeChart"
-          subtitle="Manual cut points: Age [35, 50, 65] · Income [30k, 40k, 50k]"
+          subtitle="MATLAB autobinning — cut points per fintech.pdf §4 (e.g. Age: 38, 40, 46, 49)"
         />
         <ResponsiveContainer width="100%" height={320}>
           <BarChart data={data}>

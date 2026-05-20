@@ -1,0 +1,7 @@
+Metric,Value
+AcceptedClients,14.0
+RejectedClients,6.0
+AcceptedExposure,1400000.0
+TotalExpectedLoss,129329.63
+AvgPD_Accepted,0.2309357142857143
+AvgMinRate_Accepted,9.237142857142857

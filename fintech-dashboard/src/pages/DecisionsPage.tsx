@@ -1,7 +1,8 @@
 import { PageHeader } from '../components/ui/PageHeader';
 import { GlassCard } from '../components/ui/GlassCard';
 import { SectionHeading } from '../components/ui/SectionHeading';
-import { PORTFOLIO_CLIENTS, PORTFOLIO_SUMMARY, PROJECT_META } from '../data/projectData';
+import { PORTFOLIO_CLIENTS, PROJECT_META } from '../data/projectData';
+import { PORTFOLIO_SUMMARY } from '../data/portfolioMetrics';
 import { fmtCurrency, fmtPct } from '../utils/format';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from 'recharts';
 import { CHART, tooltipStyle } from '../components/charts/chartTheme';

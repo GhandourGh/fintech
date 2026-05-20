@@ -94,7 +94,7 @@ export function ClientTestPage() {
       <PageHeader
         badge="Live demo"
         title="Client Score Test"
-        subtitle="Pick a portfolio client or enter a profile, then run a credit test. Portfolio clients return exact MATLAB outputs."
+        subtitle="Portfolio clients 1–20 return exact fintech.pdf Table 15 values. Custom profiles show illustrative scoring only."
         infoId="page.test"
       />
 

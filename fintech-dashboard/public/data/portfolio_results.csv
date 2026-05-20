@@ -1,0 +1,21 @@
+ClientID,Score,PD_Model,Decision,RiskBand,ExpectedLoss,MinRatePct,AnnualInterest
+4,100.0,0.1279,Accepted,Low Risk,5114.0,5.11,5114.0
+5,100.0,0.1279,Accepted,Low Risk,5114.0,5.11,5114.0
+6,94.9267,0.1445,Accepted,Low Risk,5781.0,5.78,5781.0
+7,85.603,0.1798,Accepted,Low Risk,7193.0,7.19,7193.0
+18,85.603,0.1798,Accepted,Low Risk,7193.0,7.19,7193.0
+2,75.3057,0.2262,Accepted,Medium Risk,9049.0,9.05,9049.0
+12,75.3057,0.2262,Accepted,Medium Risk,9049.0,9.05,9049.0
+13,75.3057,0.2262,Accepted,Medium Risk,9049.0,9.05,9049.0
+9,67.8739,0.2646,Accepted,Medium Risk,10586.0,10.59,10586.0
+17,65.6499,0.2769,Accepted,Medium Risk,11077.0,11.08,11077.0
+19,62.4199,0.2954,Accepted,Medium Risk,11814.0,11.81,11814.0
+10,62.2836,0.2962,Accepted,Medium Risk,11846.0,11.85,11846.0
+16,57.2103,0.3265,Accepted,Medium Risk,13062.0,13.06,13062.0
+8,55.8354,0.335,Accepted,Medium Risk,13402.63,13.4,13402.0
+11,39.0913,0.4459,Rejected,High Risk,17835.0,17.83,17835.0
+3,35.7363,0.4691,Rejected,High Risk,18765.0,18.77,18765.0
+14,35.7363,0.4691,Rejected,High Risk,18765.0,18.77,18765.0
+20,24.6943,0.5461,Rejected,High Risk,21845.0,21.85,21845.0
+15,4.7411,0.6776,Rejected,High Risk,27104.0,27.1,27104.0
+1,0.0,0.7059,Rejected,High Risk,28234.0,28.23,28234.0

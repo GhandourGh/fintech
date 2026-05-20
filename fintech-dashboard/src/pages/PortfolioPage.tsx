@@ -12,6 +12,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
   ZAxis,
+  Legend,
 } from 'recharts';
 import { CHART, tooltipStyle } from '../components/charts/chartTheme';
 
@@ -35,11 +36,12 @@ export function PortfolioPage() {
         <SectionHeading title="Score vs Probability of Default" infoId="section.scoreVsPd" />
         <ResponsiveContainer width="100%" height={360}>
           <ScatterChart margin={{ bottom: 20 }}>
-            <XAxis type="number" dataKey="score" name="Score" tick={{ fill: CHART.text, fontSize: 11 }} domain={[0, 100]} />
-            <YAxis type="number" dataKey="pd" name="PD %" tick={{ fill: CHART.text, fontSize: 11 }} />
+            <XAxis type="number" dataKey="score" name="Score" tick={{ fill: CHART.text, fontSize: 11 }} domain={[0, 100]} label={{ value: 'Credit Score', position: 'bottom', fill: CHART.text, fontSize: 11 }} />
+            <YAxis type="number" dataKey="pd" name="PD %" tick={{ fill: CHART.text, fontSize: 11 }} unit="%" label={{ value: 'PD (%)', angle: -90, position: 'insideLeft', fill: CHART.text, fontSize: 11 }} />
             <ZAxis range={[80, 400]} />
-            <Tooltip contentStyle={tooltipStyle} cursor={{ strokeDasharray: '3 3' }} />
-            <ReferenceLine x={PROJECT_META.optimalThreshold} stroke={CHART.high} strokeDasharray="4 4" label={{ value: 'Threshold', fill: CHART.high, fontSize: 11 }} />
+            <Tooltip contentStyle={tooltipStyle} cursor={{ strokeDasharray: '3 3' }} formatter={(v, name) => [name === 'PD %' ? `${Number(v).toFixed(2)}%` : v, name]} />
+            <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 8 }} />
+            <ReferenceLine x={PROJECT_META.optimalThreshold} stroke={CHART.high} strokeDasharray="4 4" label={{ value: `Threshold (${PROJECT_META.optimalThreshold})`, fill: CHART.high, fontSize: 10 }} />
             <Scatter
               name="Accepted"
               data={scatter.filter((d) => d.decision === 'Accepted')}
