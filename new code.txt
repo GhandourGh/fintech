@@ -1,0 +1,469 @@
+%% =========================================================
+% FINTECH SCORECARD PROJECT - FINAL PROFESSIONAL VERSION
+% Includes:
+% 1. plotbins()
+% 2. Manual bin refinement
+% 3. Train/Test validation split
+% 4. Portfolio scoring
+% 5. Expected loss and pricing
+% ==========================================================
+
+clc;
+clear;
+close all;
+
+%% 0. SETUP
+
+filePath = 'C:\Users\Maroun\OneDrive\Desktop\Master AI\Sem 2\AI in fintech\DataProjScoreCard.xlsx';
+
+loanAmount   = 100000;
+recoveryRate = 0.60;
+LGD          = 1 - recoveryRate;
+baseRate     = 0.03;
+
+projectFolder = pwd;
+outputFolder  = fullfile(projectFolder,'outputs');
+tablesFolder  = fullfile(outputFolder,'tables');
+figuresFolder = fullfile(outputFolder,'figures');
+
+if ~exist(outputFolder,'dir')
+    mkdir(outputFolder);
+end
+
+if ~exist(tablesFolder,'dir')
+    mkdir(tablesFolder);
+end
+
+if ~exist(figuresFolder,'dir')
+    mkdir(figuresFolder);
+end
+
+rng(1);
+
+%% 1. LOAD DATA
+
+historicalData = readtable(filePath,'Sheet','HistoricalData');
+portfolioData  = readtable(filePath,'Sheet','ActualPortfolioData');
+
+portfolioData = rmmissing(portfolioData,'MinNumMissing',4);
+
+historicalData.ResidentialStatus = categorical(historicalData.ResidentialStatus);
+historicalData.EmploymentStatus  = categorical(historicalData.EmploymentStatus);
+
+portfolioData.ResidentialStatus = categorical(portfolioData.ResidentialStatus);
+portfolioData.EmploymentStatus  = categorical(portfolioData.EmploymentStatus);
+
+disp('Data loaded successfully.');
+disp(head(historicalData));
+
+%% 2. DATA UNDERSTANDING
+
+missingTable = table( ...
+    historicalData.Properties.VariableNames', ...
+    sum(ismissing(historicalData))', ...
+    'VariableNames',{'Variable','MissingCount'});
+
+disp('Missing values:');
+disp(missingTable);
+
+figure('Color','white');
+histogram(categorical(historicalData.Default));
+title('Default Distribution');
+xlabel('Default Status');
+ylabel('Number of Clients');
+grid on;
+
+%% 3. PREPARE MODELING DATA
+
+scorecardData = historicalData;
+
+if ismember('ID',scorecardData.Properties.VariableNames)
+    scorecardData.ID = [];
+end
+
+if ismember('PD',scorecardData.Properties.VariableNames)
+    scorecardData.PD = [];
+end
+
+%% =========================================================
+% 4. TRAIN / TEST SPLIT
+% ==========================================================
+
+cv = cvpartition(scorecardData.Default,'HoldOut',0.30);
+
+trainData = scorecardData(training(cv),:);
+testData  = scorecardData(test(cv),:);
+
+disp(['Training observations: ',num2str(height(trainData))]);
+disp(['Testing observations: ',num2str(height(testData))]);
+
+%% =========================================================
+% 5. SCORECARD MODEL ON TRAINING DATA
+% ==========================================================
+
+scTrain = creditscorecard(trainData, ...
+    'ResponseVar','Default', ...
+    'GoodLabel',0);
+
+scTrain = autobinning(scTrain);
+
+%% =========================================================
+% 6. MANUAL BIN REFINEMENT
+% ==========================================================
+
+% Age refined into interpretable banking groups:
+% Young / middle-aged / senior customers
+scTrain = modifybins(scTrain, ...
+    'Age', ...
+    'CutPoints',[35 50 65]);
+
+% Income refined into interpretable income bands:
+% low / medium / upper-medium / high income
+scTrain = modifybins(scTrain, ...
+    'Income', ...
+    'CutPoints',[30000 40000 50000]);
+
+disp('Manual bin refinement completed.');
+
+%% =========================================================
+% 7. REQUIRED PLOTBINS + BININFO 
+% ==========================================================
+
+predictors = {'Age','Income','ResidentialStatus','EmploymentStatus'};
+
+for i = 1:length(predictors)
+
+    varName = predictors{i};
+
+    %% REQUIRED MATLAB PLOTBINS - DO NOT CREATE FIGURE BEFORE
+    hFig = plotbins(scTrain, varName, ...
+        'BinText','Count', ...
+        'WOE','On', ...
+        'Legend','On');
+
+    set(hFig,'Color','white');
+    set(hFig,'Name',['Required plotbins - ',varName]);
+
+    drawnow;
+    pause(0.5);
+
+    %% BININFO TABLE
+    [binTable,cutPoints] = bininfo(scTrain,varName);
+
+    disp(['Bin information for ',varName]);
+    disp(binTable);
+
+    %% PROFESSIONAL CUSTOM WOE PLOT
+    cleanBinTable = binTable;
+
+    if ismember('Bin',cleanBinTable.Properties.VariableNames)
+
+        binText = string(cleanBinTable.Bin);
+
+        removeRows = contains(lower(binText),'total') | ...
+                     contains(lower(binText),'<missing>');
+
+        cleanBinTable(removeRows,:) = [];
+
+    end
+
+    figure('Color','white','Name',['Custom WOE - ',varName]);
+
+    bar(cleanBinTable.WOE);
+
+    yline(0,'k-','LineWidth',1.2);
+    grid on;
+
+    xticks(1:height(cleanBinTable));
+
+    if ismember('Bin',cleanBinTable.Properties.VariableNames)
+        xticklabels(string(cleanBinTable.Bin));
+    else
+        xticklabels("Bin " + string(1:height(cleanBinTable)));
+    end
+
+    xtickangle(35);
+
+    xlabel('Bins','FontWeight','bold');
+    ylabel('Weight of Evidence (WOE)','FontWeight','bold');
+
+    title(['Professional WOE Analysis - ',varName], ...
+        'FontSize',14, ...
+        'FontWeight','bold', ...
+        'Interpreter','none');
+
+end
+
+
+%% =========================================================
+% 8. FIT TRAINING SCORECARD MODEL
+% ==========================================================
+
+scTrain = fitmodel(scTrain);
+
+disp('Training scorecard model completed.');
+disp(scTrain);
+
+pointsTableTrain = displaypoints(scTrain);
+disp(pointsTableTrain);
+
+scTrain = formatpoints(scTrain,'WorstAndBestScores',[0 100]);
+
+%% =========================================================
+% 9. TEST SET VALIDATION
+% ==========================================================
+
+testScores = score(scTrain,testData);
+testPD     = probdefault(scTrain,testData);
+
+[Xtest,Ytest,Ttest,AUCtest] = perfcurve(testData.Default,testPD,1);
+
+figure('Color','white');
+
+plot(Xtest,Ytest,'LineWidth',3);
+hold on;
+plot([0 1],[0 1],'--k','LineWidth',1.5);
+
+xlabel('False Positive Rate','FontWeight','bold');
+ylabel('True Positive Rate','FontWeight','bold');
+
+title(['ROC Curve on TEST DATA - AUC = ',num2str(AUCtest,3)], ...
+    'FontSize',14, ...
+    'FontWeight','bold');
+
+legend('Scorecard Model','Random Model','Location','southeast');
+grid on;
+
+disp(['Test AUC = ',num2str(AUCtest)]);
+
+%% =========================================================
+% 10. OPTIMAL SCORE THRESHOLD ON TRAINING DATA
+% ==========================================================
+
+trainScores = score(scTrain,trainData);
+
+uniqueScores = unique(trainScores);
+bestValue = -inf;
+optimalScore = 0;
+
+for i = 1:length(uniqueScores)
+
+    C = uniqueScores(i);
+
+    predictedDefault = trainScores < C;
+    actualDefault = trainData.Default == 1;
+
+    TP = sum(predictedDefault == 1 & actualDefault == 1);
+    TN = sum(predictedDefault == 0 & actualDefault == 0);
+    FP = sum(predictedDefault == 1 & actualDefault == 0);
+    FN = sum(predictedDefault == 0 & actualDefault == 1);
+
+    TPR = TP / (TP + FN);
+    TNR = TN / (TN + FP);
+
+    value = TPR + TNR;
+
+    if value > bestValue
+        bestValue = value;
+        optimalScore = C;
+    end
+
+end
+
+disp(['Optimal Score Threshold = ',num2str(optimalScore)]);
+
+%% =========================================================
+% 11. TEST CONFUSION MATRIX
+% ==========================================================
+
+predictedDefaultTest = testScores < optimalScore;
+actualDefaultTest = testData.Default == 1;
+
+TP = sum(predictedDefaultTest == 1 & actualDefaultTest == 1);
+TN = sum(predictedDefaultTest == 0 & actualDefaultTest == 0);
+FP = sum(predictedDefaultTest == 1 & actualDefaultTest == 0);
+FN = sum(predictedDefaultTest == 0 & actualDefaultTest == 1);
+
+accuracy  = (TP + TN) / (TP + TN + FP + FN);
+precision = TP / (TP + FP);
+recall    = TP / (TP + FN);
+f1Score   = 2 * (precision * recall) / (precision + recall);
+
+validationMetrics = table( ...
+    AUCtest,accuracy,precision,recall,f1Score, ...
+    'VariableNames',{'AUC','Accuracy','Precision','Recall','F1Score'});
+
+disp('Validation Metrics on Test Data:');
+disp(validationMetrics);
+
+figure('Color','white');
+confusionchart(actualDefaultTest,predictedDefaultTest);
+title('Confusion Matrix on Test Data');
+
+%% =========================================================
+% 12. FINAL PRODUCTION SCORECARD ON FULL HISTORICAL DATA
+% ==========================================================
+
+scFinal = creditscorecard(scorecardData, ...
+    'ResponseVar','Default', ...
+    'GoodLabel',0);
+
+scFinal = autobinning(scFinal);
+
+scFinal = modifybins(scFinal,'Age','CutPoints',[35 50 65]);
+scFinal = modifybins(scFinal,'Income','CutPoints',[30000 40000 50000]);
+
+scFinal = fitmodel(scFinal);
+scFinal = formatpoints(scFinal,'WorstAndBestScores',[0 100]);
+
+pointsTableFinal = displaypoints(scFinal);
+
+disp('Final production scorecard completed.');
+disp(pointsTableFinal);
+
+%% =========================================================
+% 13. SCORE ACTUAL PORTFOLIO
+% ==========================================================
+
+portfolioModelData = portfolioData;
+
+if ismember('ID',portfolioModelData.Properties.VariableNames)
+    portfolioModelData.ID = [];
+end
+
+if ismember('PD',portfolioModelData.Properties.VariableNames)
+    portfolioModelData.PD = [];
+end
+
+if ismember('Default',portfolioModelData.Properties.VariableNames)
+    portfolioModelData.Default = [];
+end
+
+portfolioScores = score(scFinal,portfolioModelData);
+portfolioPD     = probdefault(scFinal,portfolioModelData);
+
+portfolioResults = portfolioData;
+
+portfolioResults.Score = portfolioScores;
+portfolioResults.PD_Model = portfolioPD;
+
+portfolioResults.Decision = repmat("Rejected",height(portfolioResults),1);
+portfolioResults.Decision(portfolioResults.Score >= optimalScore) = "Accepted";
+
+portfolioResults.RiskBand = repmat("High Risk",height(portfolioResults),1);
+portfolioResults.RiskBand(portfolioResults.Score >= 50 & portfolioResults.Score < 80) = "Medium Risk";
+portfolioResults.RiskBand(portfolioResults.Score >= 80) = "Low Risk";
+
+portfolioResults = sortrows(portfolioResults,'Score','descend');
+
+disp('Portfolio Results:');
+disp(portfolioResults);
+
+%% =========================================================
+% 14. EXPECTED LOSS AND INTEREST RATE PRICING
+% ==========================================================
+
+portfolioResults.LoanAmount   = repmat(loanAmount,height(portfolioResults),1);
+portfolioResults.RecoveryRate = repmat(recoveryRate,height(portfolioResults),1);
+portfolioResults.LGD          = repmat(LGD,height(portfolioResults),1);
+
+portfolioResults.ExpectedLoss = ...
+    portfolioResults.PD_Model .* portfolioResults.LGD .* portfolioResults.LoanAmount;
+
+portfolioResults.MinimumInterestRate = ...
+    baseRate + portfolioResults.PD_Model .* portfolioResults.LGD;
+
+portfolioResults.MinimumInterestRatePercent = ...
+    100 * portfolioResults.MinimumInterestRate;
+
+acceptedPortfolio = portfolioResults(portfolioResults.Decision == "Accepted",:);
+
+disp('Accepted Portfolio Summary:');
+disp(['Number of Accepted Clients = ',num2str(height(acceptedPortfolio))]);
+disp(['Total Exposure = $',num2str(sum(acceptedPortfolio.LoanAmount))]);
+disp(['Total Expected Loss = $',num2str(sum(acceptedPortfolio.ExpectedLoss))]);
+disp(['Average PD = ',num2str(mean(acceptedPortfolio.PD_Model))]);
+disp(['Average Interest Rate = ',num2str(mean(acceptedPortfolio.MinimumInterestRatePercent)),'%']);
+
+%% =========================================================
+% 15. PORTFOLIO VISUALIZATIONS
+% ==========================================================
+
+figure('Color','white');
+bar(portfolioResults.ID,portfolioResults.Score);
+hold on;
+yline(optimalScore,'r--','Optimal Score','LineWidth',2);
+title('Client Scores Compared to Optimal Threshold');
+xlabel('Client ID');
+ylabel('Score');
+grid on;
+
+figure('Color','white');
+bar(portfolioResults.ID,portfolioResults.PD_Model);
+title('Probability of Default per Client');
+xlabel('Client ID');
+ylabel('Predicted PD');
+grid on;
+
+figure('Color','white');
+bar(portfolioResults.ID,portfolioResults.ExpectedLoss);
+title('Expected Loss per Client');
+xlabel('Client ID');
+ylabel('Expected Loss ($)');
+grid on;
+
+figure('Color','white');
+bar(portfolioResults.ID,portfolioResults.MinimumInterestRatePercent);
+title('Minimum Interest Rate per Client');
+xlabel('Client ID');
+ylabel('Minimum Interest Rate (%)');
+grid on;
+
+figure('Color','white');
+decisionCounts = countcats(categorical(portfolioResults.Decision));
+decisionLabels = categories(categorical(portfolioResults.Decision));
+bar(categorical(decisionLabels),decisionCounts);
+title('Accepted vs Rejected Clients');
+xlabel('Decision');
+ylabel('Number of Clients');
+grid on;
+
+figure('Color','white');
+riskCounts = countcats(categorical(portfolioResults.RiskBand));
+riskLabels = categories(categorical(portfolioResults.RiskBand));
+bar(categorical(riskLabels),riskCounts);
+title('Portfolio Risk Segmentation');
+xlabel('Risk Band');
+ylabel('Number of Clients');
+grid on;
+
+figure('Color','white');
+scatter(portfolioResults.Score,portfolioResults.PD_Model,80,'filled');
+title('Score vs Probability of Default');
+xlabel('Score');
+ylabel('PD');
+grid on;
+
+%% =========================================================
+% 16. SAVE RESULTS
+% ==========================================================
+
+writetable(missingTable,fullfile(tablesFolder,'missing_values_summary.csv'));
+writetable(pointsTableTrain,fullfile(tablesFolder,'training_scorecard_points.csv'));
+writetable(pointsTableFinal,fullfile(tablesFolder,'final_scorecard_points.csv'));
+writetable(validationMetrics,fullfile(tablesFolder,'validation_metrics.csv'));
+writetable(portfolioResults,fullfile(tablesFolder,'portfolio_scoring_results.csv'));
+writetable(acceptedPortfolio,fullfile(tablesFolder,'accepted_portfolio.csv'));
+
+figHandles = findall(groot,'Type','figure');
+
+for k = 1:length(figHandles)
+
+    saveas(figHandles(k), ...
+        fullfile(figuresFolder,['Figure_',num2str(k),'.png']));
+
+end
+
+disp('====================================================');
+disp('FINAL PROFESSIONAL FINTECH SCORECARD PROJECT COMPLETED');
+disp('====================================================');
