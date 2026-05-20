@@ -43,11 +43,11 @@ export function MetricCard({ label, value, sub, icon: Icon, delay = 0, accent = 
       >
         <Icon size={20} />
       </motion.div>
-      <p className="text-xs uppercase tracking-widest text-[var(--text-muted)] font-medium mb-1 pr-8 leading-snug">
+      <p className="text-xs uppercase tracking-widest text-[var(--text-muted)] font-medium mb-1 pr-8 leading-snug break-words">
         {label}
       </p>
-      <p className="font-display text-2xl md:text-3xl font-bold text-[var(--text-primary)] tracking-tight">{value}</p>
-      {sub && <p className="text-sm text-[var(--text-secondary)] mt-1.5">{sub}</p>}
+      <p className="font-display text-2xl md:text-3xl font-bold text-[var(--text-primary)] tracking-tight break-words">{value}</p>
+      {sub && <p className="text-sm text-[var(--text-secondary)] mt-1.5 leading-snug break-words">{sub}</p>}
     </GlassCard>
   );
 }

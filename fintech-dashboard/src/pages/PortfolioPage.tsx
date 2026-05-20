@@ -14,7 +14,7 @@ import {
   ZAxis,
   Legend,
 } from 'recharts';
-import { CHART, tooltipStyle } from '../components/charts/chartTheme';
+import { CHART, CHART_MARGIN, tooltipStyle } from '../components/charts/chartTheme';
 
 const scatter = PORTFOLIO_CLIENTS.map((c) => ({
   score: c.score,
@@ -34,14 +34,35 @@ export function PortfolioPage() {
       />
       <GlassCard>
         <SectionHeading title="Score vs Probability of Default" infoId="section.scoreVsPd" />
-        <ResponsiveContainer width="100%" height={360}>
-          <ScatterChart margin={{ bottom: 20 }}>
-            <XAxis type="number" dataKey="score" name="Score" tick={{ fill: CHART.text, fontSize: 11 }} domain={[0, 100]} label={{ value: 'Credit Score', position: 'bottom', fill: CHART.text, fontSize: 11 }} />
-            <YAxis type="number" dataKey="pd" name="PD %" tick={{ fill: CHART.text, fontSize: 11 }} unit="%" label={{ value: 'PD (%)', angle: -90, position: 'insideLeft', fill: CHART.text, fontSize: 11 }} />
+        <div className="w-full min-h-[380px]">
+        <ResponsiveContainer width="100%" height={380}>
+          <ScatterChart margin={CHART_MARGIN.scatter}>
+            <XAxis
+              type="number"
+              dataKey="score"
+              name="Score"
+              tick={{ fill: CHART.text, fontSize: 11 }}
+              domain={[0, 100]}
+              label={{ value: 'Credit Score', position: 'insideBottom', offset: -6, fill: CHART.text, fontSize: 11 }}
+            />
+            <YAxis
+              type="number"
+              dataKey="pd"
+              name="PD %"
+              tick={{ fill: CHART.text, fontSize: 11 }}
+              unit="%"
+              width={44}
+              label={{ value: 'PD (%)', angle: -90, position: 'insideLeft', fill: CHART.text, fontSize: 11, dx: 12 }}
+            />
             <ZAxis range={[80, 400]} />
             <Tooltip contentStyle={tooltipStyle} cursor={{ strokeDasharray: '3 3' }} formatter={(v, name) => [name === 'PD %' ? `${Number(v).toFixed(2)}%` : v, name]} />
-            <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 8 }} />
-            <ReferenceLine x={PROJECT_META.optimalThreshold} stroke={CHART.high} strokeDasharray="4 4" label={{ value: `Threshold (${PROJECT_META.optimalThreshold})`, fill: CHART.high, fontSize: 10 }} />
+            <Legend verticalAlign="top" height={28} wrapperStyle={{ paddingBottom: 4 }} />
+            <ReferenceLine
+              x={PROJECT_META.optimalThreshold}
+              stroke={CHART.high}
+              strokeDasharray="4 4"
+              label={{ value: `KS ${PROJECT_META.optimalThreshold}`, position: 'insideTop', fill: CHART.high, fontSize: 10 }}
+            />
             <Scatter
               name="Accepted"
               data={scatter.filter((d) => d.decision === 'Accepted')}
@@ -54,6 +75,7 @@ export function PortfolioPage() {
             />
           </ScatterChart>
         </ResponsiveContainer>
+        </div>
       </GlassCard>
       <div className="flex items-center gap-2 mt-6 mb-3">
         <h3 className="font-display font-semibold text-lg">Risk band segmentation</h3>

@@ -65,8 +65,8 @@ export function OverviewPage() {
       >
         <GlassCard className="lg:col-span-2">
           <SectionHeading title="Default Distribution — Historical Data" infoId="section.defaultDistribution" />
-          <div className="h-64 flex items-center gap-8">
-            <ResponsiveContainer width="50%" height="100%">
+          <div className="min-h-64 flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
+            <ResponsiveContainer width="100%" height={200} className="sm:!w-1/2 sm:!h-full sm:min-h-[256px]">
               <PieChart>
                 <Pie data={defaultPie} cx="50%" cy="50%" innerRadius={55} outerRadius={85} paddingAngle={3} dataKey="value">
                   {defaultPie.map((e) => (
@@ -76,7 +76,7 @@ export function OverviewPage() {
                 <Tooltip contentStyle={tooltipStyle} />
               </PieChart>
             </ResponsiveContainer>
-            <div className="space-y-4">
+            <div className="space-y-4 w-full sm:w-auto text-center sm:text-left">
               <motion.div whileHover={{ x: 4 }}>
                 <p className="text-3xl font-display font-bold text-[var(--text-primary)]">{fmtPct(HISTORICAL.defaultRate)}</p>
                 <p className="text-sm text-[var(--text-secondary)]">Portfolio default rate</p>

@@ -22,14 +22,14 @@ export function PageHeader({ title, subtitle, badge, infoId }: Props) {
           {badge}
         </span>
       )}
-      <div className="flex items-start gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3">
         <div className="flex-1 min-w-0">
-          <h1 className="font-display text-3xl md:text-4xl font-bold text-[var(--text-primary)] tracking-tight">
+          <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--text-primary)] tracking-tight break-words">
             {title}
           </h1>
-          <p className="mt-2 text-[var(--text-secondary)] max-w-2xl text-base leading-relaxed">{subtitle}</p>
+          <p className="mt-2 text-[var(--text-secondary)] max-w-2xl text-sm sm:text-base leading-relaxed">{subtitle}</p>
         </div>
-        {infoId && <InfoTip id={infoId} size="md" className="mt-2 shrink-0" />}
+        {infoId && <InfoTip id={infoId} size="md" className="shrink-0 self-start sm:mt-2" />}
       </div>
     </motion.header>
   );

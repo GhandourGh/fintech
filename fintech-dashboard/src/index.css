@@ -109,3 +109,12 @@ body {
 .recharts-cartesian-grid-vertical line {
   stroke: var(--border) !important;
 }
+
+/* Prevent chart axis labels from clipping parent cards */
+.recharts-wrapper {
+  overflow: visible !important;
+}
+
+.recharts-surface {
+  overflow: visible;
+}

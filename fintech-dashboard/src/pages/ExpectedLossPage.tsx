@@ -7,7 +7,7 @@ import { PORTFOLIO_SUMMARY, getAcceptedClients } from '../data/portfolioMetrics'
 import { fmtCurrency, fmtPct } from '../utils/format';
 import { DollarSign, ShieldAlert, PieChart as PieIcon } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { CHART, tooltipStyle } from '../components/charts/chartTheme';
+import { CHART, CHART_MARGIN, tooltipStyle } from '../components/charts/chartTheme';
 
 const accepted = getAcceptedClients();
 const elChart = accepted.map((c) => ({ id: `C${c.id}`, el: c.expectedLoss }));
@@ -33,10 +33,11 @@ export function ExpectedLossPage() {
           infoId="section.elChart"
           subtitle={`ExpectedLoss = PD_Model × LGD × $100,000 · Sum of bars = ${fmtCurrency(elFromChart)}`}
         />
-        <ResponsiveContainer width="100%" height={340}>
-          <BarChart data={elChart}>
-            <XAxis dataKey="id" tick={{ fill: CHART.text, fontSize: 10 }} />
-            <YAxis tick={{ fill: CHART.text, fontSize: 10 }} />
+        <div className="w-full min-h-[360px]">
+        <ResponsiveContainer width="100%" height={360}>
+          <BarChart data={elChart} margin={CHART_MARGIN.angledX}>
+            <XAxis dataKey="id" tick={{ fill: CHART.text, fontSize: 10 }} angle={-35} textAnchor="end" height={56} interval={0} />
+            <YAxis tick={{ fill: CHART.text, fontSize: 10 }} width={56} tickFormatter={(v) => `${(Number(v) / 1000).toFixed(0)}k`} />
             <Tooltip contentStyle={tooltipStyle} formatter={(v) => [fmtCurrency(Number(v)), 'EL']} />
             <Bar dataKey="el" fill={CHART.teal} radius={[6, 6, 0, 0]}>
               {elChart.map((_, i) => (
@@ -45,6 +46,7 @@ export function ExpectedLossPage() {
             </Bar>
           </BarChart>
         </ResponsiveContainer>
+        </div>
       </GlassCard>
     </div>
   );

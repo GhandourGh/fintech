@@ -262,14 +262,13 @@ export function ClientTestPage() {
                 exit={{ opacity: 0 }}
                 className="space-y-6"
               >
-                <div className="flex flex-wrap items-center gap-3">
-                  <InfoTip id="section.testResult" className="ml-auto" />
-                  <span className="text-xs font-mono uppercase tracking-widest text-teal-500 border border-teal-500/30 px-3 py-1 rounded-full">
+                <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3">
+                  <span className="text-xs font-mono uppercase tracking-widest text-teal-500 border border-teal-500/30 px-3 py-1 rounded-full w-fit">
                     {result.official ? `MATLAB · Client #${result.clientId}` : 'Custom · demo estimate'}
                   </span>
                   <span
                     className={clsx(
-                      'px-4 py-1.5 rounded-full text-sm font-bold',
+                      'px-4 py-1.5 rounded-full text-sm font-bold w-fit',
                       result.decision === 'Accepted'
                         ? 'bg-emerald-500/15 text-emerald-500'
                         : 'bg-red-500/15 text-red-500'
@@ -277,6 +276,7 @@ export function ClientTestPage() {
                   >
                     {result.decision}
                   </span>
+                  <InfoTip id="section.testResult" className="sm:ml-auto" />
                 </div>
 
                 <ScoreGauge score={result.score} threshold={PROJECT_META.optimalThreshold} />
@@ -391,11 +391,11 @@ function ScoreGauge({ score, threshold }: { score: number; threshold: number }) 
 
   return (
     <motion.div className="p-6 rounded-2xl border border-[var(--border)] bg-[var(--bg-primary)]/30">
-      <motion.div className="flex justify-between text-xs text-[var(--text-muted)] mb-2">
-        <span>0</span>
-        <span className="text-amber-500">Threshold {threshold}</span>
-        <span>100</span>
-      </motion.div>
+      <div className="flex justify-between text-xs text-[var(--text-muted)] mb-2 gap-2">
+        <span className="shrink-0">0</span>
+        <span className="text-amber-500 text-center truncate px-1">Threshold {threshold}</span>
+        <span className="shrink-0">100</span>
+      </div>
       <motion.div className="relative h-4 rounded-full bg-[var(--border)] overflow-hidden">
         <motion.div
           className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-red-500 via-amber-500 to-emerald-500"

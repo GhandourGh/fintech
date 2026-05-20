@@ -7,7 +7,7 @@ import {
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
   ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, Tooltip, Cell,
 } from 'recharts';
-import { CHART, tooltipStyle } from '../components/charts/chartTheme';
+import { CHART, CHART_MARGIN, tooltipStyle } from '../components/charts/chartTheme';
 
 const decisionData = [
   { name: 'Accepted', count: PORTFOLIO_SUMMARY.accepted, color: CHART.low },
@@ -38,15 +38,17 @@ export function PerformancePage() {
       <div className="grid lg:grid-cols-2 gap-6">
         <GlassCard>
           <SectionHeading title="Validation Radar" infoId="section.validationRadar" />
-          <ResponsiveContainer width="100%" height={320}>
-            <RadarChart data={radarData}>
+          <div className="w-full min-h-[300px]">
+          <ResponsiveContainer width="100%" height={300}>
+            <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="72%">
               <PolarGrid stroke={CHART.grid} />
-              <PolarAngleAxis dataKey="metric" tick={{ fill: CHART.text, fontSize: 11 }} />
-              <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: CHART.text, fontSize: 9 }} />
-              <Radar name="Test metrics %" dataKey="value" stroke={CHART.teal} fill={CHART.teal} fillOpacity={0.35} />
-              <Legend />
+              <PolarAngleAxis dataKey="metric" tick={{ fill: CHART.text, fontSize: 10 }} />
+              <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: CHART.text, fontSize: 9 }} tickCount={5} />
+              <Radar name="Validation %" dataKey="value" stroke={CHART.teal} fill={CHART.teal} fillOpacity={0.35} />
+              <Legend wrapperStyle={{ paddingTop: 12 }} />
             </RadarChart>
           </ResponsiveContainer>
+          </div>
         </GlassCard>
         <GlassCard delay={0.1}>
           <SectionHeading title="Project Outcomes" infoId="section.projectOutcomes" />
@@ -91,8 +93,8 @@ export function PerformancePage() {
         <GlassCard delay={0.25}>
           <SectionHeading title="Risk Band Distribution (All 20 Clients)" infoId="section.projectOutcomes" />
           <ResponsiveContainer width="100%" height={240}>
-            <BarChart data={riskBandData}>
-              <XAxis dataKey="band" tick={{ fill: CHART.text, fontSize: 11 }} />
+            <BarChart data={riskBandData} margin={CHART_MARGIN.bottomLabel}>
+              <XAxis dataKey="band" tick={{ fill: CHART.text, fontSize: 10 }} interval={0} />
               <YAxis tick={{ fill: CHART.text, fontSize: 11 }} domain={[0, 12]} />
               <Tooltip contentStyle={tooltipStyle} formatter={(v) => [v, 'Clients']} />
               <Bar dataKey="count" radius={[8, 8, 0, 0]}>

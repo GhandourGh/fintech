@@ -5,7 +5,7 @@ import { PORTFOLIO_CLIENTS, PROJECT_META } from '../data/projectData';
 import { PORTFOLIO_SUMMARY } from '../data/portfolioMetrics';
 import { fmtCurrency, fmtPct } from '../utils/format';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from 'recharts';
-import { CHART, tooltipStyle } from '../components/charts/chartTheme';
+import { CHART, CHART_MARGIN, tooltipStyle } from '../components/charts/chartTheme';
 import clsx from 'clsx';
 
 export function DecisionsPage() {
@@ -46,12 +46,18 @@ export function DecisionsPage() {
         </GlassCard>
         <GlassCard delay={0.1}>
           <SectionHeading title="Client Scores vs Threshold" infoId="section.scoresThreshold" />
-          <ResponsiveContainer width="100%" height={260}>
-            <BarChart data={scoreData} margin={{ bottom: 40 }}>
-              <XAxis dataKey="id" tick={{ fill: CHART.text, fontSize: 9 }} angle={-45} textAnchor="end" height={50} />
-              <YAxis domain={[0, 100]} tick={{ fill: CHART.text }} />
+          <div className="w-full min-h-[300px]">
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={scoreData} margin={CHART_MARGIN.angledX}>
+              <XAxis dataKey="id" tick={{ fill: CHART.text, fontSize: 9 }} angle={-45} textAnchor="end" height={64} interval={0} />
+              <YAxis domain={[0, 100]} tick={{ fill: CHART.text }} width={36} />
               <Tooltip contentStyle={tooltipStyle} />
-              <ReferenceLine y={PROJECT_META.optimalThreshold} stroke={CHART.high} strokeDasharray="4 4" />
+              <ReferenceLine
+                y={PROJECT_META.optimalThreshold}
+                stroke={CHART.high}
+                strokeDasharray="4 4"
+                label={{ value: `Cutoff ${PROJECT_META.optimalThreshold}`, position: 'insideTopRight', fill: CHART.high, fontSize: 10 }}
+              />
               <Bar dataKey="score" radius={[4, 4, 0, 0]}>
                 {scoreData.map((d) => (
                   <Cell key={d.id} fill={d.fill} />
@@ -59,6 +65,7 @@ export function DecisionsPage() {
               </Bar>
             </BarChart>
           </ResponsiveContainer>
+          </div>
         </GlassCard>
       </div>
       <GlassCard>

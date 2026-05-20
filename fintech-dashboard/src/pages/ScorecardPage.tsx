@@ -4,7 +4,7 @@ import { SectionHeading } from '../components/ui/SectionHeading';
 import { SCORECARD_POINTS } from '../data/projectData';
 import type { HelpId } from '../data/helpContent';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { CHART, tooltipStyle } from '../components/charts/chartTheme';
+import { CHART, CHART_MARGIN, shortScorecardBin, tooltipStyle } from '../components/charts/chartTheme';
 
 const byPredictor = ['Age', 'Income', 'ResidentialStatus', 'EmploymentStatus'] as const;
 
@@ -30,10 +30,17 @@ export function ScorecardPage() {
           return (
             <GlassCard key={pred} delay={idx * 0.08}>
               <SectionHeading title={pred} infoId={PREDICTOR_INFO[pred]} />
-              <ResponsiveContainer width="100%" height={220}>
-                <BarChart data={rows} layout="vertical" margin={{ left: 80 }}>
+              <div className="w-full min-h-[240px]">
+              <ResponsiveContainer width="100%" height={240}>
+                <BarChart data={rows} layout="vertical" margin={CHART_MARGIN.verticalBars}>
                   <XAxis type="number" tick={{ fill: CHART.text, fontSize: 10 }} />
-                  <YAxis type="category" dataKey="bin" width={75} tick={{ fill: CHART.text, fontSize: 10 }} />
+                  <YAxis
+                    type="category"
+                    dataKey="bin"
+                    width={100}
+                    tickFormatter={shortScorecardBin}
+                    tick={{ fill: CHART.text, fontSize: 9 }}
+                  />
                   <Tooltip contentStyle={tooltipStyle} />
                   <Bar dataKey="points" radius={[0, 4, 4, 0]}>
                     {rows.map((r) => (
@@ -42,6 +49,7 @@ export function ScorecardPage() {
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
+              </div>
               <table className="w-full mt-4 text-xs">
                 <thead>
                   <tr className="text-[var(--text-muted)] border-b border-[var(--border)]">

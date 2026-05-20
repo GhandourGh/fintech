@@ -15,7 +15,7 @@ import {
   CartesianGrid,
   Legend,
 } from 'recharts';
-import { CHART, tooltipStyle } from '../components/charts/chartTheme';
+import { CHART, CHART_MARGIN, tooltipStyle } from '../components/charts/chartTheme';
 
 /** ROC shape consistent with AUC 0.6775 (HistoricalData, validatemodel) */
 const rocData = [
@@ -51,17 +51,27 @@ export function ValidationPage() {
       <div className="grid lg:grid-cols-2 gap-6">
         <GlassCard>
           <SectionHeading title="ROC Curve — HistoricalData" infoId="section.roc" subtitle="AUC = 0.6775 (final report)" />
+          <div className="w-full min-h-[340px]">
           <ResponsiveContainer width="100%" height={340}>
-            <LineChart data={rocData}>
+            <LineChart data={rocData} margin={CHART_MARGIN.roc}>
               <CartesianGrid strokeDasharray="3 3" stroke={CHART.grid} />
-              <XAxis dataKey="fpr" tick={{ fill: CHART.text, fontSize: 11 }} label={{ value: 'False Positive Rate', position: 'bottom', fill: CHART.text, fontSize: 11 }} />
-              <YAxis tick={{ fill: CHART.text, fontSize: 11 }} label={{ value: 'True Positive Rate', angle: -90, position: 'insideLeft', fill: CHART.text, fontSize: 11 }} />
+              <XAxis
+                dataKey="fpr"
+                tick={{ fill: CHART.text, fontSize: 11 }}
+                label={{ value: 'False Positive Rate', position: 'insideBottom', offset: -8, fill: CHART.text, fontSize: 11 }}
+              />
+              <YAxis
+                tick={{ fill: CHART.text, fontSize: 11 }}
+                width={44}
+                label={{ value: 'True Positive Rate', angle: -90, position: 'insideLeft', fill: CHART.text, fontSize: 11, dx: 12 }}
+              />
               <Tooltip contentStyle={tooltipStyle} />
-              <Legend />
+              <Legend wrapperStyle={{ paddingTop: 8 }} />
               <Line type="monotone" dataKey="tpr" name={`Scorecard (AUC=${VALIDATION.auc})`} stroke={CHART.teal} strokeWidth={3} dot={false} />
               <Line type="monotone" dataKey="random" name="Random" stroke={CHART.text} strokeDasharray="6 4" dot={false} />
             </LineChart>
           </ResponsiveContainer>
+          </div>
         </GlassCard>
         <GlassCard delay={0.1}>
           <SectionHeading title="Validation Summary" infoId="section.validationSummary" />
@@ -75,9 +85,9 @@ export function ValidationPage() {
               ['Portfolio rule', `Accept if Score ≥ ${PROJECT_META.optimalThreshold}`],
               ['Accuracy Ratio', VALIDATION.accuracyRatio.toFixed(4)],
             ].map(([k, v]) => (
-              <div key={k} className="flex justify-between border-b border-[var(--border)] pb-2 last:border-0 gap-4">
-                <dt className="text-[var(--text-muted)]">{k}</dt>
-                <dd className="font-mono font-medium text-right">{v}</dd>
+              <div key={k} className="flex justify-between gap-4 border-b border-[var(--border)] pb-2 last:border-0">
+                <dt className="text-[var(--text-muted)] shrink-0">{k}</dt>
+                <dd className="font-mono font-medium text-right break-words min-w-0">{v}</dd>
               </div>
             ))}
           </dl>
