@@ -14,6 +14,11 @@ const rateData = [...PORTFOLIO_CLIENTS]
     decision: c.decision,
   }));
 
+const acceptedRates = PORTFOLIO_CLIENTS.filter((c) => c.decision === 'Accepted').map((c) => c.minRate);
+const rejectedRates = PORTFOLIO_CLIENTS.filter((c) => c.decision === 'Rejected').map((c) => c.minRate);
+const lowestAcceptedRate = acceptedRates.length ? Math.min(...acceptedRates) : 0;
+const highestRejectedRate = rejectedRates.length ? Math.max(...rejectedRates) : 0;
+
 export function PricingPage() {
   return (
     <div>
@@ -56,11 +61,11 @@ export function PricingPage() {
         <div className="mt-6 grid sm:grid-cols-2 gap-4 text-sm">
           <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5">
             <p className="text-[var(--text-muted)]">Lowest accepted client rate</p>
-            <p className="font-display text-2xl font-bold text-emerald-500 mt-1">7.71%</p>
+            <p className="font-display text-2xl font-bold text-emerald-500 mt-1">{lowestAcceptedRate.toFixed(2)}%</p>
           </div>
           <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/5">
             <p className="text-[var(--text-muted)]">Highest rejected client rate</p>
-            <p className="font-display text-2xl font-bold text-red-500 mt-1">30.48%</p>
+            <p className="font-display text-2xl font-bold text-red-500 mt-1">{highestRejectedRate.toFixed(2)}%</p>
           </div>
         </div>
       </GlassCard>

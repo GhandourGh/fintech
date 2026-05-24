@@ -12,7 +12,7 @@ ClientID,Score,PD_Model,Decision,RiskBand,ExpectedLoss,MinRatePct,AnnualInterest
 19,62.4199,0.2954,Accepted,Medium Risk,11814.0,11.81,11814.0
 10,62.2836,0.2962,Accepted,Medium Risk,11846.0,11.85,11846.0
 16,57.2103,0.3265,Accepted,Medium Risk,13062.0,13.06,13062.0
-8,55.8354,0.335,Accepted,Medium Risk,13402.63,13.4,13402.0
+8,55.8354,0.335,Accepted,Medium Risk,13402.0,13.4,13402.0
 11,39.0913,0.4459,Rejected,High Risk,17835.0,17.83,17835.0
 3,35.7363,0.4691,Rejected,High Risk,18765.0,18.77,18765.0
 14,35.7363,0.4691,Rejected,High Risk,18765.0,18.77,18765.0

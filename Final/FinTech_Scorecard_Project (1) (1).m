@@ -23,9 +23,7 @@ close all;
 %% 0. SETUP --------------------------------------------------
 
 % Use a relative path so the project is portable
-% Dataset lives in ../data/ (portable with repo layout)
-scriptDir = fileparts(mfilename('fullpath'));
-filePath = fullfile(scriptDir, '..', 'data', 'DataProjScoreCard.xlsx');
+filePath = fullfile(pwd,'DataProjScoreCard.xlsx');
 
 EAD          = 100000;           % Exposure at default per client ($100K loan)
 recoveryRate = 0.60;             % Given by the assignment

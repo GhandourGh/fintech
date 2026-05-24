@@ -1,5 +1,5 @@
 /**
- * Official metrics from fintech.pdf (final report) — MATLAB outputs / Table 15–18.
+ * Official metrics from Final/fintech (1).pdf (professor submission) — Tables 15–16.
  * Historical segments from DataProjScoreCard.xlsx.
  */
 
@@ -111,7 +111,7 @@ export type PortfolioClient = {
   employment: string;
 };
 
-/** Table 15 — portfolio_results.csv (fintech.pdf) */
+/** Table 15 — portfolio_results.csv (Final/fintech (1).pdf) */
 export const PORTFOLIO_CLIENTS: PortfolioClient[] = [
   { id: 4, score: 100, pd: 0.1279, decision: 'Accepted', riskBand: 'Low Risk', expectedLoss: 5114, minRate: 5.11, annualInterest: 5114, age: 50, income: 54000, residential: 'HomeOwner', employment: 'Employed' },
   { id: 5, score: 100, pd: 0.1279, decision: 'Accepted', riskBand: 'Low Risk', expectedLoss: 5114, minRate: 5.11, annualInterest: 5114, age: 60, income: 54000, residential: 'HomeOwner', employment: 'Employed' },
@@ -126,7 +126,7 @@ export const PORTFOLIO_CLIENTS: PortfolioClient[] = [
   { id: 19, score: 62.4199, pd: 0.2954, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 11814, minRate: 11.81, annualInterest: 11814, age: 40, income: 66000, residential: 'HomeOwner', employment: 'Other' },
   { id: 10, score: 62.2836, pd: 0.2962, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 11846, minRate: 11.85, annualInterest: 11846, age: 57, income: 68700, residential: 'renter', employment: 'Other' },
   { id: 16, score: 57.2103, pd: 0.3265, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 13062, minRate: 13.06, annualInterest: 13062, age: 63, income: 45400, residential: 'renter', employment: 'Other' },
-  { id: 8, score: 55.8354, pd: 0.335, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 13402.63, minRate: 13.4, annualInterest: 13402, age: 29, income: 44000, residential: 'renter', employment: 'Employed' },
+  { id: 8, score: 55.8354, pd: 0.335, decision: 'Accepted', riskBand: 'Medium Risk', expectedLoss: 13402, minRate: 13.4, annualInterest: 13402, age: 29, income: 44000, residential: 'renter', employment: 'Employed' },
   { id: 11, score: 39.0913, pd: 0.4459, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 17835, minRate: 17.83, annualInterest: 17835, age: 59, income: 23500, residential: 'HomeOwner', employment: 'Other' },
   { id: 3, score: 35.7363, pd: 0.4691, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 18765, minRate: 18.77, annualInterest: 18765, age: 55, income: 30000, residential: 'renter', employment: 'Other' },
   { id: 14, score: 35.7363, pd: 0.4691, decision: 'Rejected', riskBand: 'High Risk', expectedLoss: 18765, minRate: 18.77, annualInterest: 18765, age: 66, income: 31200, residential: 'renter', employment: 'Other' },

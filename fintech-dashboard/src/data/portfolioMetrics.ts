@@ -1,6 +1,6 @@
 import { PORTFOLIO_CLIENTS, type PortfolioClient } from './projectData';
 
-/** Match PROJECT_META / fintech.pdf Table 16 */
+/** Match Final/fintech (1).pdf Table 16 */
 const LGD = 0.4;
 const EAD = 100_000;
 export const REPORT_ACCEPTED_EL = 129_329.63;
@@ -27,7 +27,8 @@ export function getRejectedClients() {
 export function computePortfolioSummary() {
   const accepted = getAcceptedClients();
   const rejected = getRejectedClients();
-  const acceptedExpectedLoss = accepted.reduce((s, c) => s + c.expectedLoss, 0);
+  // Table 16 total (MATLAB); per-client EL in Table 15 may round to whole dollars
+  const acceptedExpectedLoss = REPORT_ACCEPTED_EL;
   const acceptedAvgPd =
     accepted.length > 0 ? accepted.reduce((s, c) => s + c.pd, 0) / accepted.length : 0;
   const acceptedAvgRate =

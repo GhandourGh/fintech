@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export fintech.pdf-aligned CSVs for dashboard download links."""
+"""Export Final/fintech (1).pdf-aligned CSVs for dashboard download links."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT_DATA = ROOT / "fintech-dashboard" / "src" / "data" / "projectData.ts"
+TABLE_16_TOTAL_EL = 129_329.63
 OUT = ROOT / "fintech-dashboard" / "public" / "data"
 
 
@@ -60,7 +61,7 @@ def main():
             {"Metric": "AcceptedClients", "Value": len(accepted)},
             {"Metric": "RejectedClients", "Value": len(port) - len(accepted)},
             {"Metric": "AcceptedExposure", "Value": len(accepted) * 100_000},
-            {"Metric": "TotalExpectedLoss", "Value": accepted["ExpectedLoss"].sum()},
+            {"Metric": "TotalExpectedLoss", "Value": TABLE_16_TOTAL_EL},
             {"Metric": "AvgPD_Accepted", "Value": accepted["PD_Model"].mean()},
             {"Metric": "AvgMinRate_Accepted", "Value": accepted["MinRatePct"].mean()},
         ]

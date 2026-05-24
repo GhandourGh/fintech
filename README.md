@@ -1,13 +1,16 @@
 # FinTech Credit Scorecard Project
 
-AI in FinTech — credit scorecard modeling, portfolio decisions, expected loss, and risk-based pricing. The interactive dashboard (**RiskLens**) reflects the official report in `docs/fintech.pdf`.
+AI in FinTech — credit scorecard modeling, portfolio decisions, expected loss, and risk-based pricing. The interactive dashboard (**RiskLens**) reflects the professor submission in `Final/`.
 
 ## Project layout
 
 ```
 Fintech-Project/
+├── Final/                       # Submitted to professor (source of truth)
+│   ├── fintech (1).pdf
+│   └── FinTech_Scorecard_Project (1) (1).m
 ├── docs/
-│   └── fintech.pdf              # Final report (source of truth)
+│   └── fintech.pdf              # Copy of Final report
 ├── data/
 │   └── DataProjScoreCard.xlsx   # HistoricalData + ActualPortfolioData
 ├── matlab/
@@ -37,6 +40,7 @@ From the **repository root**:
 python3 scripts/generate_charts.py
 python3 scripts/export_report_csv.py
 python3 scripts/validate_dashboard.py
+python3 scripts/validate_against_final.py
 ```
 
 Charts appear under `fintech-dashboard/public/generated/`. CSVs under `fintech-dashboard/public/data/`.
@@ -51,7 +55,7 @@ Build: `cd fintech-dashboard && npm run build`
 
 Deploy the `fintech-dashboard` folder on Vercel or Netlify with root directory `fintech-dashboard`, build command `npm run build`, publish directory `dist`.
 
-## Key results (fintech.pdf)
+## Key results (Final/fintech (1).pdf, Table 16)
 
 | Metric | Value |
 |--------|--------|

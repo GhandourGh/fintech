@@ -31,7 +31,7 @@ export function ExpectedLossPage() {
         <SectionHeading
           title="Expected Loss per Accepted Client"
           infoId="section.elChart"
-          subtitle={`ExpectedLoss = PD_Model × LGD × $100,000 · Sum of bars = ${fmtCurrency(elFromChart)}`}
+          subtitle={`ExpectedLoss = PD_Model × LGD × $100,000 · Table 16 total = ${fmtCurrency(PORTFOLIO_SUMMARY.acceptedExpectedLoss)} · Sum of bars = ${fmtCurrency(elFromChart)}`}
         />
         <div className="w-full min-h-[360px]">
         <ResponsiveContainer width="100%" height={360}>

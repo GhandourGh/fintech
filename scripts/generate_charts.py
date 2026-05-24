@@ -41,7 +41,7 @@ PORTFOLIO = [
     {"id": 19, "score": 62.4199, "pd": 0.2954, "decision": "Accepted", "risk": "Medium Risk", "el": 11814, "rate": 11.81},
     {"id": 10, "score": 62.2836, "pd": 0.2962, "decision": "Accepted", "risk": "Medium Risk", "el": 11846, "rate": 11.85},
     {"id": 16, "score": 57.2103, "pd": 0.3265, "decision": "Accepted", "risk": "Medium Risk", "el": 13062, "rate": 13.06},
-    {"id": 8, "score": 55.8354, "pd": 0.335, "decision": "Accepted", "risk": "Medium Risk", "el": 13402.63, "rate": 13.4},
+    {"id": 8, "score": 55.8354, "pd": 0.335, "decision": "Accepted", "risk": "Medium Risk", "el": 13402, "rate": 13.4},
     {"id": 11, "score": 39.0913, "pd": 0.4459, "decision": "Rejected", "risk": "High Risk", "el": 17835, "rate": 17.83},
     {"id": 3, "score": 35.7363, "pd": 0.4691, "decision": "Rejected", "risk": "High Risk", "el": 18765, "rate": 18.77},
     {"id": 14, "score": 35.7363, "pd": 0.4691, "decision": "Rejected", "risk": "High Risk", "el": 18765, "rate": 18.77},
