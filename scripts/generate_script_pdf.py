@@ -16,7 +16,7 @@ OUTPUT_PDF = ROOT / "docs" / "presentation-script.pdf"
 STYLES = """
 @page {
   size: A4;
-  margin: 2cm 2.2cm;
+  margin: 1.8cm 2cm;
   @bottom-center {
     content: counter(page);
     font-size: 9pt;
@@ -30,14 +30,18 @@ body {
   color: #0f172a;
 }
 h1 {
-  font-size: 20pt;
+  font-size: 19pt;
   color: #0d9488;
   border-bottom: 2px solid #0d9488;
-  padding-bottom: 0.25em;
-  margin-top: 0;
+  padding-bottom: 0.3em;
+  margin-top: 0.6em;
+  page-break-before: always;
+}
+h1:first-of-type {
+  page-break-before: avoid;
 }
 h2 {
-  font-size: 14pt;
+  font-size: 13pt;
   color: #134e4a;
   margin-top: 1.4em;
   page-break-after: avoid;
@@ -67,6 +71,7 @@ th, td {
   border: 1px solid #cbd5e1;
   padding: 0.35em 0.55em;
   text-align: left;
+  vertical-align: top;
 }
 th {
   background: #0d9488;
@@ -99,12 +104,15 @@ hr {
 strong {
   color: #0f766e;
 }
+em {
+  color: #334155;
+}
 ul, ol {
-  margin: 0.4em 0;
-  padding-left: 1.4em;
+  margin: 0.45em 0;
+  padding-left: 1.45em;
 }
 li {
-  margin: 0.2em 0;
+  margin: 0.25em 0;
 }
 """
 
@@ -119,17 +127,15 @@ def main() -> int:
         md_text,
         extensions=["tables", "fenced_code", "nl2br", "sane_lists"],
     )
-    full_html = f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <title>Presentation Script — FinTech Credit Scorecard</title>
-  <style>{STYLES}</style>
-</head>
-<body>
-{body_html}
-</body>
-</html>"""
+    full_html = (
+        "<!DOCTYPE html><html lang=\"en\"><head>"
+        "<meta charset=\"utf-8\"/>"
+        "<title>Presentation Script — AI in FinTech</title>"
+        f"<style>{STYLES}</style>"
+        "</head><body>"
+        f"{body_html}"
+        "</body></html>"
+    )
 
     OUTPUT_PDF.parent.mkdir(parents=True, exist_ok=True)
     HTML(string=full_html, base_url=str(ROOT)).write_pdf(str(OUTPUT_PDF))

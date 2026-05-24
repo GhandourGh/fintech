@@ -11,8 +11,8 @@ Fintech-Project/
 │   └── FinTech_Scorecard_Project (1) (1).m
 ├── docs/
 │   ├── fintech.pdf              # Copy of Final report
-│   └── presentation-script.pdf  # Printable presenter script (from script.md)
-├── script.md                    # Presentation script (source for PDF)
+│   └── presentation-script.pdf  # Live-demo presenter script (from script.md)
+├── script.md                    # Source markdown for the presentation
 ├── data/
 │   └── DataProjScoreCard.xlsx   # HistoricalData + ActualPortfolioData
 ├── matlab/
@@ -20,7 +20,8 @@ Fintech-Project/
 ├── scripts/
 │   ├── generate_charts.py       # Regenerate dashboard chart PNGs
 │   ├── export_report_csv.py     # Export Table 15 / validation CSVs
-│   └── validate_dashboard.py    # Check numbers vs report + Excel
+│   ├── validate_dashboard.py    # Check numbers vs report + Excel
+│   └── generate_script_pdf.py   # Re-render docs/presentation-script.pdf
 └── fintech-dashboard/           # React + Vite web app
 ```
 
