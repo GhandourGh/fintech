@@ -3,25 +3,16 @@ import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Shield } from 'lucide-react';
 import clsx from 'clsx';
-
-const LINKS = [
-  ['/', 'Overview'],
-  ['/scorecard', 'Scorecard'],
-  ['/woe', 'WOE'],
-  ['/validation', 'Validation'],
-  ['/portfolio', 'Portfolio'],
-  ['/decisions', 'Decisions'],
-  ['/expected-loss', 'EL'],
-  ['/pricing', 'Pricing'],
-  ['/explorer', 'Explorer'],
-  ['/test', 'Test'],
-  ['/performance', 'Performance'],
-  ['/final', 'Final'],
-  ['/outputs/matlab', 'Charts'],
-] as const;
+import { PRESENTATION_NAV, SUPPLEMENTARY_NAV } from '../../config/presentationNav';
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
+
+  const mainLinks = PRESENTATION_NAV.map((item) => [item.to, `${item.step}. ${item.label}`] as const);
+  const extraLinks = SUPPLEMENTARY_NAV.map((item) => [
+    item.to,
+    item.step > 0 ? `${item.step}. ${item.label}` : item.label,
+  ] as const);
 
   return (
     <header className="lg:hidden sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg-secondary)]/95 backdrop-blur-xl">
@@ -42,7 +33,7 @@ export function MobileNav() {
             exit={{ height: 0, opacity: 0 }}
             className="px-4 pb-4 flex flex-wrap gap-2 overflow-hidden"
           >
-            {LINKS.map(([to, label]) => (
+            {mainLinks.map(([to, label]) => (
               <NavLink
                 key={to}
                 to={to}
@@ -51,6 +42,22 @@ export function MobileNav() {
                 className={({ isActive }) =>
                   clsx(
                     'text-xs px-3 py-1.5 rounded-full border',
+                    isActive ? 'bg-teal-500/20 border-teal-500/40 text-teal-500' : 'border-[var(--border)]'
+                  )
+                }
+              >
+                {label}
+              </NavLink>
+            ))}
+            {extraLinks.map(([to, label]) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={to === '/'}
+                onClick={() => setOpen(false)}
+                className={({ isActive }) =>
+                  clsx(
+                    'text-xs px-3 py-1.5 rounded-full border border-dashed opacity-80',
                     isActive ? 'bg-teal-500/20 border-teal-500/40 text-teal-500' : 'border-[var(--border)]'
                   )
                 }

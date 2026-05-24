@@ -4,7 +4,8 @@
 **Tools:** MATLAB Credit Scorecard Toolbox · `DataProjScoreCard.xlsx` · **RiskLens** dashboard  
 
 > **Before presenting:** Open the RiskLens dashboard (`cd fintech-dashboard` → `npm run dev` → http://localhost:5173/).  
-> Keep the written report (`Final/fintech (1).pdf`) open as backup on a second device.
+> Keep the written report (`Final/fintech (1).pdf`) open as backup on a second device.  
+> **Downloadable PDF:** [`docs/presentation-script.pdf`](docs/presentation-script.pdf) — regenerate with `python3 scripts/generate_script_pdf.py`.
 
 ---
 
@@ -21,6 +22,29 @@
 
 ---
 
+## Slide map (RiskLens navbar order)
+
+Use the **numbered sidebar** in the dashboard — steps **1–11** match this table. PowerPoint title slides are separate; live demo slides start at **1**.
+
+| Step | Dashboard page | Slide name (say aloud) | Primary speaker |
+|------|----------------|------------------------|-----------------|
+| **1** | Overview (`/`) | **Introduction & Problem / Data** | Speakers 1, 2, 3 (workflow recap) |
+| **2** | WOE & Binning (`/woe`) | **WOE & Binning Analysis** | Speaker 3 |
+| **3** | Scorecard (`/scorecard`) | **Credit Scorecard Points** | Speaker 3 |
+| **4** | ROC & Validation (`/validation`) | **ROC Curve & Validation Metrics** | Speaker 4 |
+| **5** | Portfolio Risk (`/portfolio`) | **Portfolio Scoring — Score vs PD** | Speaker 4 |
+| **6** | Accept / Reject (`/decisions`) | **Accept vs Reject Decisions** | Speaker 5 |
+| **7** | Expected Loss (`/expected-loss`) | **Expected Loss Dashboard** | Speaker 5 |
+| **8** | Risk Pricing (`/pricing`) | **Risk-Based Interest Rates** | Speaker 5 |
+| **9** | Model Performance (`/performance`) | **Model Performance Summary** | Speaker 6 |
+| **10** | Final Decision (`/final`) | **Final Portfolio Decision** | Speaker 6 |
+| **11** | Live Client Test (`/test`) | **Live Client Test (Demo)** | Speaker 6 |
+| **12** | MATLAB & Excel Charts (`/outputs/matlab`) | **MATLAB & Excel Source Charts** *(appendix)* | Speaker 2 / 5 *(optional)* |
+
+> **Client Explorer** (`/explorer`) is not numbered — use only if asked in Q&A.
+
+---
+
 ## Speaker 1 — Introduction  
 **~4–5 minutes**
 
@@ -32,7 +56,7 @@ Good morning / good afternoon everyone. Today’s presentation is **Portfolio Op
 
 The core idea is straightforward: a bank receives loan applications and must decide three things for each client — **should we lend**, **how much could we lose if they default**, and **what is the minimum interest rate** that covers that expected loss. We answer these questions using a **credit scorecard** — a statistical model that converts borrower profile data into a score from **0 to 100**, where a higher score means lower risk.
 
-**[Switch to live demo — RiskLens dashboard, Overview page (`/`)]**
+**[Switch to Slide 1 — Introduction & Problem / Data: RiskLens Overview (`/`)]**
 
 **RiskLens** is the interactive front end of our project. Every figure and metric on screen is tied to the same MATLAB pipeline and final report — think of it as a live control room for the scorecard, not a separate set of numbers.
 
@@ -68,13 +92,13 @@ Next, we move from this overview into the **business problem and the data** behi
 ## Speaker 2 — Problem / Background  
 **~4–5 minutes**
 
-**[Slide: “Why credit scoring?”]**
+**[Slide 1 — Introduction & Problem / Data *(continued)*]**
 
-Building on that overview, this section covers the **problem background** and **exploratory data analysis**.
+Building on that overview, this section covers the **problem background** and **exploratory data analysis**. Stay on **Slide 1 — Overview** in RiskLens.
 
 When a bank receives a loan application, it faces a simple but costly question: **Will this client repay, or will they default?** If the bank accepts too many risky clients, it loses money. If it rejects too many safe clients, it loses business. A **credit scorecard** helps the bank rank applicants from safer to riskier using observable characteristics — age, income, housing status, and employment.
 
-**[Switch to the Overview page — Default Distribution section]**
+**[Slide 1 — Overview: scroll to Default Distribution]**
 
 **[Point at the pie chart on the left — Good vs Bad.]**
 
@@ -92,7 +116,7 @@ When we explore the data, a clear pattern appears. **Lower income bands show hig
 
 Age shows a similar story: **younger applicants** tend to default more often than **older applicants**. Homeowners default less frequently than renters, and employed clients default less than those in the “Other” employment category.
 
-**[Switch to the next slide — Portfolio applicants]**
+**[Slide 1 — Overview: scroll to Portfolio applicants section]**
 
 Beyond historical data, we also have **ActualPortfolioData**: **20 new applicants** the bank wants to evaluate. Each has the same demographic fields but **no default label** — because they are future clients. Our job is to score them, decide accept or reject, estimate expected loss, and set minimum pricing.
 
@@ -105,7 +129,7 @@ Key assumptions used throughout the project:
 
 These assumptions flow through every dollar figure in our results.
 
-**[Optional: open `/outputs/excel` — Historical default distribution chart]**
+**[Optional: Slide 12 — MATLAB & Excel Source Charts (`/outputs/matlab`) — historical default distribution]**
 
 **[Point at the historical default distribution chart.]**
 
@@ -127,13 +151,13 @@ That gives us a clear foundation: **500 labeled historical records** for learnin
 ## Speaker 3 — Methodology / Process (Part 1)  
 **~4–5 minutes**
 
-**[Slide: “Methodology — MATLAB Credit Scorecard Workflow”]**
+**[Slide 1 — Overview: 10-step workflow pipeline *(methodology intro)*]**
 
 This part covers the **first half of the methodology**: data preparation, binning, Weight of Evidence, and scorecard construction.
 
 All code is in **`FinTech_Scorecard_Project.m`**, using MATLAB’s **Credit Scorecard Toolbox**.
 
-**[Switch to Overview page — scroll to the 10-step workflow pipeline]**
+**[Slide 1 — Overview: scroll to the 10-step workflow pipeline]**
 
 **[Point at Steps 1–5.]**
 
@@ -143,7 +167,7 @@ All code is in **`FinTech_Scorecard_Project.m`**, using MATLAB’s **Credit Scor
 
 **Step 3 — Autobinning & WOE:** We call `autobinning()` to let MATLAB find **data-driven optimal cut points** for Age and Income, rather than choosing arbitrary bins by hand. For each predictor we run `bininfo()` and `plotbins()` — which the assignment explicitly requires.
 
-**[Switch to WOE & Binning page (`/woe`)]**
+**[Switch to Slide 2 — WOE & Binning Analysis (`/woe`)]**
 
 **[Point at the Information Value summary cards at the top.]**
 
@@ -165,7 +189,7 @@ On this chart, income bins below **$28,000** have strongly **negative WOE** — 
 
 Each card shows the bin, number of observations, default percentage, and WOE value — matching the **bininfo** tables in our written report.
 
-**[Switch to Scorecard page (`/scorecard`)]**
+**[Switch to Slide 3 — Credit Scorecard Points (`/scorecard`)]**
 
 **[Point at the Income bar chart.]**
 
@@ -193,11 +217,11 @@ At this point the scorecard is fully defined — but the critical question remai
 ## Speaker 4 — Methodology (Part 2) + Validation / Results Setup  
 **~4–5 minutes**
 
-**[Slide: “Model Validation — ROC & KS Statistic”]**
+**[Slide 4 — ROC Curve & Validation Metrics]**
 
 This section covers **model validation**, how the **accept/reject cutoff** is chosen, and how the **20 portfolio applicants** are scored.
 
-**[Switch to Validation page (`/validation`)]**
+**[Switch to Slide 4 — ROC & Validation (`/validation`)]**
 
 **[Point at the four metric cards.]**
 
@@ -232,7 +256,7 @@ That KS score becomes our **official acceptance threshold**:
 
 This is a standard industry approach: the cutoff is **data-driven**, not arbitrary.
 
-**[Switch to Portfolio Risk page (`/portfolio`)]**
+**[Switch to Slide 5 — Portfolio Scoring — Score vs PD (`/portfolio`)]**
 
 **[Point at the Score vs PD scatter plot.]**
 
@@ -269,11 +293,11 @@ Scores, PDs, and a decision rule are now in place. The following section transla
 ## Speaker 5 — Results / Analysis  
 **~4–5 minutes**
 
-**[Slide: “Portfolio Results — Table 15 & Table 16”]**
+**[Slides 6–8 — Portfolio Results (Tables 15 & 16)]**
 
 This section presents the **key numerical results** — who was accepted, total exposure, expected loss, and risk-based minimum interest rates.
 
-**[Switch to Accept / Reject page (`/decisions`)]**
+**[Switch to Slide 6 — Accept vs Reject Decisions (`/decisions`)]**
 
 **[Point at the Decision Breakdown bar chart.]**
 
@@ -299,7 +323,7 @@ The full table matches **Table 15** in our report. For example:
 - Client **4**: Score **100**, PD **12.79%**, Accepted, Expected Loss **$5,114**
 - Client **1**: Score **0**, PD **70.59%**, Rejected, Expected Loss **$28,234** *(not booked)*
 
-**[Switch to Expected Loss page (`/expected-loss`)]**
+**[Switch to Slide 7 — Expected Loss Dashboard (`/expected-loss`)]**
 
 **[Point at the three summary metric cards.]**
 
@@ -319,7 +343,7 @@ Each bar is one accepted client’s expected loss in dollars. Taller bars mean m
 
 The **$129,329.63** total is the dollar amount the bank should **provision or cover through pricing** on the accepted book, assuming a **60% recovery rate**.
 
-**[Switch to Risk Pricing page (`/pricing`)]**
+**[Switch to Slide 8 — Risk-Based Interest Rates (`/pricing`)]**
 
 **[Point at the minimum interest rate bar chart.]**
 
@@ -335,7 +359,7 @@ The **average minimum break-even rate** across the 14 accepted clients is **9.24
 
 The **lowest accepted rate is 5.11%**; the **highest rejected rate is 28.23%** (client **1**). Rejected clients would require prohibitively high rates — another reason rejection makes business sense.
 
-**[Optional: open `/outputs/matlab` — point at expected_loss_per_client.png and min_rate_per_client.png]**
+**[Optional: Slide 12 — MATLAB & Excel Source Charts (`/outputs/matlab`) — expected_loss_per_client.png and min_rate_per_client.png]**
 
 These MATLAB-generated figures in our appendix match what you see in the dashboard.
 
@@ -355,11 +379,11 @@ The quantitative story is complete. The final section discusses **what these res
 ## Speaker 6 — Discussion / Insights + Conclusion  
 **~4–5 minutes**
 
-**[Slide: “Discussion & Conclusion”]**
+**[Slides 9–11 — Discussion & Conclusion]**
 
 To close, this section covers **business insights**, **limitations**, and the **final portfolio recommendation**.
 
-**[Switch to Model Performance page (`/performance`)]**
+**[Switch to Slide 9 — Model Performance Summary (`/performance`)]**
 
 **[Point at the Validation Radar chart.]**
 
@@ -377,7 +401,7 @@ Looking back at model performance holistically: our scorecard achieves **AUC 0.6
 
 4. **Transparency:** Every decision traces back to observable characteristics and a documented cutoff — important for regulators and internal audit.
 
-**[Switch to Final Decision page (`/final`)]**
+**[Switch to Slide 10 — Final Portfolio Decision (`/final`)]**
 
 **[Point at the headline banner — 14 clients, $1.4M exposure.]**
 
@@ -387,7 +411,7 @@ Our **final recommended portfolio** is **14 clients**, **$1.4 million** in expos
 
 Five clients are **Low Risk** (score above 80). Nine are **Medium Risk** (between 50 and 80). All six rejected clients fall in the **High Risk** band (score below 50).
 
-**[Switch to Live Client Test page (`/test`) — optional 30-second demo]**
+**[Switch to Slide 11 — Live Client Test (`/test`) — optional 30-second demo]**
 
 **[Select Client 4 from the dropdown. Click “Run credit test.”]**
 
@@ -406,7 +430,7 @@ As a quick demo: if we test **Client 4** live in RiskLens, the dashboard returns
 
 Despite these limits, the project demonstrates the **full end-to-end credit scorecard lifecycle**: from raw Excel data through WOE binning, logistic regression, validation, portfolio decision, expected loss, and risk-based pricing.
 
-**[Switch to the title slide or Final page.]**
+**[Return to title slide, or remain on Slide 10 — Final Portfolio Decision (`/final`)]**
 
 **Conclusion**
 
@@ -450,4 +474,4 @@ Quick reference for likely questions:
 
 ---
 
-*Script aligned with `Final/fintech (1).pdf` and the RiskLens dashboard. Last updated: May 2026.*
+*Script aligned with `Final/fintech (1).pdf`, RiskLens navbar steps 1–12, and `fintech-dashboard/src/config/presentationNav.ts`. Last updated: May 2026.*

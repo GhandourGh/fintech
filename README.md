@@ -10,7 +10,9 @@ Fintech-Project/
 │   ├── fintech (1).pdf
 │   └── FinTech_Scorecard_Project (1) (1).m
 ├── docs/
-│   └── fintech.pdf              # Copy of Final report
+│   ├── fintech.pdf              # Copy of Final report
+│   └── presentation-script.pdf  # Printable presenter script (from script.md)
+├── script.md                    # Presentation script (source for PDF)
 ├── data/
 │   └── DataProjScoreCard.xlsx   # HistoricalData + ActualPortfolioData
 ├── matlab/
@@ -41,6 +43,7 @@ python3 scripts/generate_charts.py
 python3 scripts/export_report_csv.py
 python3 scripts/validate_dashboard.py
 python3 scripts/validate_against_final.py
+python3 scripts/generate_script_pdf.py   # docs/presentation-script.pdf
 ```
 
 Charts appear under `fintech-dashboard/public/generated/`. CSVs under `fintech-dashboard/public/data/`.
