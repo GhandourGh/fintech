@@ -1,13 +1,15 @@
 # Presentation Script — AI in FinTech: Credit Scorecard System
 
 **Format:** Live demo on the **RiskLens** dashboard (not a PowerPoint).  
-**Total length:** ~25–30 minutes · **6 speakers** · ~4–5 min each.  
+**Total length:** **30 minutes · 6 speakers × 5 minutes each.**  
 **Backed by:** `Final/fintech (1).pdf` (Tables 13 / 15 / 16) and `matlab/FinTech_Scorecard_Project.m`.
 
 > **Before going live:**  
-> `cd fintech-dashboard && npm run dev` → open the dashboard, log in if needed, sit on **Slide 1 — Overview (`/`)**.  
+> `cd fintech-dashboard && npm run dev` → open the dashboard, sit on **Slide 1 — Overview (`/`)**.  
 > Keep the report PDF open on a second device as backup.  
 > Use the numbered sidebar (1–11) to navigate — every speaker advances by clicking the next step.
+
+> **Pacing note:** Each speaker has ~680 words of speech below — that lands on ~5:00 at a natural 130–140 wpm with the planned pauses. **Bracketed cues are silent** — they tell you where to point and click, not what to read.
 
 ---
 
@@ -30,529 +32,436 @@
 
 ---
 
-# Speaker 1 — Introduction & dashboard tour
+# Speaker 1 — Introduction, project framing & dashboard tour
 
-**Time:** ~4 minutes · **Page:** Slide 1 — **Overview (`/`)**
+**Time:** 5:00 · **Page:** Slide 1 — **Overview (`/`)**
 
-**[Stand near the screen. Dashboard already on Slide 1. Pause 2 seconds, eye contact, smile.]**
+**[Stand near the screen. Dashboard already on Slide 1. Pause 2 seconds. Eye contact. Smile.]**
 
-Good morning everyone. We're presenting our **AI in FinTech** project — a complete credit risk system that takes a real loan portfolio, scores each applicant, decides who to accept, calculates the expected loss in dollars, and sets a fair interest rate for every approved client.
+Good morning everyone. The project we're presenting today is called **AI in FinTech — a Credit Scorecard System** — and what we want to show you is what happens when you take a real, messy business question that banks face every single day, and answer it with a transparent, data-driven tool.
 
-Instead of slides, we'll show you the entire project **live on our dashboard**, called **RiskLens**. Everything you see here is built on top of our MATLAB model and our final report — same numbers, same logic, just made interactive so you can see the story unfold.
+The question itself is very simple. A bank receives a stack of loan applications. For every single applicant the bank has to make three decisions, all at the same time: **should we lend at all**, **how much money could we lose if this client defaults**, and **what is the minimum interest rate we have to charge so we don't lose money on average?** Get those three answers right consistently, and the bank makes a profit. Get them wrong, and it doesn't.
 
-**[Point at the badge that says “Executive Dashboard” and read the title.]**
+**[Pause briefly. Open hand toward the screen.]**
 
-This first page is the **Overview** — it gives the headline numbers before we dig in.
+So instead of presenting our work to you in a static PowerPoint, we've built it into a fully interactive dashboard called **RiskLens**. Every chart, every metric, every table that you'll see today is **live**, generated from the **same MATLAB model and the same Excel data** that produced our written final report. There is no gap between what we say and what the system actually does — and that's deliberate, because **transparency** is the whole point of credit risk modelling.
 
-**[Point at the four metric cards across the top, one by one.]**
+**[Brief pause.]**
 
-Four key facts about the project:
+This is also why we framed the project as **AI in FinTech** rather than pure machine learning. In banking, you can't just hand a credit officer a black box and tell them to trust it — every decision has to be **explainable to the customer, to the auditor, and to the regulator**. So the model we built is deliberately simple on the surface and rigorous underneath. Four predictors. One score. One rule. One dashboard.
 
-- **500 historical records** — clients with known outcomes used to *learn* who tends to default.
-- **AUC of 0.6775** — a standard measure of how well the model separates good clients from bad. We'll explain this in detail later.
-- **20 portfolio clients** — these are new loan applications waiting for a decision: **14 accepted**, **6 rejected**.
-- **$1.4 million in accepted exposure** with an **expected loss of $129,329.63** — that's the money at risk on the loans we'd actually book.
+**[Point at the badge in the top-left that reads "Executive Dashboard".]**
+
+The page we're on right now is the **Overview** — the executive summary of the entire project. Let me walk you through it.
+
+**[Point at the four metric cards along the top, left to right.]**
+
+Four headline numbers tell the whole story:
+
+- **500 historical records** — these are past clients with **known outcomes**. We know whether each one paid back their loan or defaulted, and the model learns from them.
+- **AUC equals 0.6775** — that's a standard measure of how well the model separates good clients from bad ones. We'll dig into what that number means later on; for now just remember it's the model's report card.
+- **20 portfolio clients** — these are 20 brand-new applicants the bank wants us to evaluate. Once the model runs, **14 are accepted, 6 are rejected**.
+- **$1.4 million of accepted exposure** with an **expected loss of $129,329.63** — that's the dollar amount the bank is putting at risk on the loans it would actually book, and the loss it should be ready to absorb.
 
 **[Pause for 2 seconds. Emphasize this result.]**
 
-So at a glance: the dashboard answers a real bank question — *out of 20 people knocking on the door, who do we lend to, how much can we lose, and what should we charge?*
+So at a glance, the dashboard answers the bank's real question: *out of 20 people knocking on the door, who do we lend to, how much can we lose, and what should we charge them?* All in one place.
 
-**[Scroll slightly down to the “Key Parameters” panel on the right.]**
+**[Scroll slightly down so the “Key Parameters” panel on the right is visible.]**
 
-On the right we list the **ground rules** used everywhere in the project. Every loan is **$100,000**, the recovery rate if the client defaults is **60%**, so the **Loss Given Default — LGD — is 40%**. Our cutoff score for accepting a loan is **48.2032**, scores go from **0 to 100**, and the minimum interest rate formula is **PD × LGD**. We'll come back to all of these.
+On the right of the page you can see the **ground rules** that apply across the whole project. Every loan is a **fixed $100,000**. If a client defaults, the bank still recovers **60%** of the money — through collateral, asset seizure, or collections — which leaves a **40%** loss per dollar lent. That 40% is called **LGD, Loss Given Default**. Our acceptance threshold is the **score 48.2032**, scores live between **0 and 100**, and the minimum interest rate is calculated as **PD times LGD**. You'll see every one of these numbers in action over the next twenty-five minutes.
 
-**[Pause briefly. Look at the sidebar.]**
+**[Hover briefly over the numbered sidebar on the left.]**
 
-One thing worth pointing out: notice the **numbered sidebar** on the left — steps **1 through 11**. That's the order we'll walk through today. Each of my teammates will take you through one or more of those steps live.
+Notice the **numbered sidebar** on the left — **steps 1 through 11**. That's the exact order of our presentation today. Each of my five teammates will take over for one or more of those steps, and we'll move through the dashboard live as if we were running this in front of a real credit committee. The flow is straightforward: we start with the data and the problem, build the model, validate it, apply it to twenty real applicants, and finish with the dollar outcomes and a live demo of the scoring engine.
 
-**[Hover over Step 1 in the sidebar, then turn back to the audience.]**
+**[Pause for 2 seconds. Turn slightly toward the next speaker.]**
 
-Now my colleague will explain the **business problem we're solving** and the **data behind the model**.
+To begin properly, my colleague will now explain **why this matters as a business problem** and walk you through the **data behind the model**.
 
-> **Transition →** “To make sense of these numbers, let's start with the problem itself and the data we used.”
+> **Transition →** *"Let's start with the problem itself and the dataset behind everything you'll see today."*
 
 ---
 
-# Speaker 2 — Business problem, data, and methodology overview
+# Speaker 2 — Business problem, dataset & exploratory analysis
 
-**Time:** ~4–5 minutes · **Page:** stays on Slide 1 — **Overview (`/`)**
+**Time:** 5:00 · **Page:** stays on Slide 1 — **Overview (`/`)**
 
 **[Take over the screen. Stay on Slide 1 — Overview. Look at the audience.]**
 
-Thank you. Before talking about charts and metrics, let's answer the obvious question: **why does any of this matter?**
+Thank you. Before we get into models and graphs, I want to spend a minute on **why credit risk modelling is one of the most important problems in finance** — because it sets the context for everything we built.
 
-When a bank receives a loan application, it really only has two ways to be wrong. If it accepts too many risky clients, it loses money on **defaults**. If it rejects too many good clients, it loses **revenue and market share**. The whole point of a **credit scorecard** is to rank applicants from safer to riskier using simple facts the bank already knows — **age**, **income**, **whether they own or rent**, and **whether they're employed**. A good model is one that puts most defaulters at the bottom and most good payers at the top.
-
-**[Scroll slightly down to the “Default Distribution — Historical Data” pie chart.]**
-
-This is our **training dataset**: **500 historical clients** from the bank's records — read from the `HistoricalData` sheet of `DataProjScoreCard.xlsx`.
-
-**[Point at the pie chart and the numbers next to it.]**
-
-- **320 clients paid back normally** — coded as **0**, the green slice.
-- **180 clients defaulted** — coded as **1**, the red slice.
-- That's a portfolio default rate of **36%**.
-
-**[Emphasize this result.]**
-
-Thirty-six percent is **high** — much higher than what a real bank would tolerate without intervention. That's exactly why the bank needs a scorecard: a tool to push that number down by being more selective.
-
-**[Scroll down so the four “Default Rate by…” charts are visible.]**
-
-Now look at where the defaults are coming from. We split the 500 clients by **age**, **income**, **residential status**, and **employment** — and the story is very clear.
-
-**[Point at “Default Rate by Income Band”.]**
-
-Income is the strongest signal. Clients earning **under $30k** default about **57%** of the time. Clients earning **over $50k** default only **21%**. That's a huge gap.
-
-**[Point at “Default Rate by Age Group”.]**
-
-Age tells a similar story — under-35s default **50%** of the time, while clients over 65 only **17%**.
-
-**[Point at the residential and employment charts.]**
-
-**Renters** default more than **homeowners** — 40% vs 31%. **Unemployed or self-employed** ("Other") clients default at **44%** versus **28%** for fully employed clients.
-
-**[Pause. Look at the audience.]**
-
-These four patterns are exactly what the model is going to learn. We're not inventing a formula — we're letting the data show us **which combinations of characteristics correlate with repayment**.
-
-**[Scroll down to the “MATLAB Workflow Pipeline” strip — do NOT read every step word-for-word.]**
-
-Quickly, the pipeline behind everything you'll see today: we **load the data**, let MATLAB **group clients into risk buckets**, fit a **logistic regression**, **rescale the result into a 0–100 score**, **validate it** on the same historical data, and then **apply it to 20 new applicants** to make accept/reject decisions, calculate expected losses, and price the loans.
-
-**[Mention this business insight clearly.]**
-
-The important point: this is **AI in FinTech**, not a black-box machine-learning experiment. Every decision is traceable — we can always tell the bank exactly *why* a client got a particular score and exactly *why* a loan was rejected. That transparency is critical for credit risk, audit, and regulation.
+When a bank lends money, it has **two ways to get the decision wrong**. If it accepts too many risky clients, defaults pile up and the bank loses real money. If it rejects too many safe clients, it loses revenue, market share, and reputation. The art of credit risk is finding the cutoff that minimises **both** mistakes at the same time. A **credit scorecard** is the tool the entire global banking industry uses to do that — it ranks applicants from safest to riskiest based on a handful of facts the bank already collects on every application form: **age, annual income, whether the client owns or rents their home, and whether they're formally employed**.
 
 **[Pause for 2 seconds.]**
 
-So we have **500 labelled past clients** and **20 new applicants** to evaluate. Next, my colleague will explain how MATLAB turns these four features into a credit score.
+Our project uses exactly those four predictors — nothing exotic, nothing private — and the data we used comes from a single Excel file called **`DataProjScoreCard.xlsx`**, which contains two sheets.
 
-> **Transition →** “Let's see how MATLAB groups the data and builds the actual scorecard.”
+**[Point at the “Default Distribution — Historical Data” section.]**
 
----
+The first sheet is called **HistoricalData** — **500 past clients** the bank has already lent to. For each of them we know **age, income, residential status, employment status, and the default flag** — coded as **0 if they paid back normally** and **1 if they defaulted**.
 
-# Speaker 3 — Binning, WOE, Information Value & Scorecard construction
+**[Point at the pie chart and the numbers next to it.]**
 
-**Time:** ~4–5 minutes · **Pages:** Slide 2 — **WOE & Binning (`/woe`)** then Slide 3 — **Scorecard (`/scorecard`)**
+Out of those 500 clients, **320 are good payers — the green slice — and 180 are defaulters — the red slice**. That gives us a portfolio default rate of **36%**.
 
-**[Click step 2 in the sidebar — WOE & Binning. Wait for the page to load.]**
+**[Pause. Emphasize this result.]**
 
-We're now on **Slide 2 — WOE & Binning Analysis**. This is where the model starts to take shape.
+Thirty-six percent is **really high**. A typical retail bank works with a default rate between 3% and 8%. So either this is a stress-tested educational dataset or it represents a high-risk lending segment — either way, it's exactly the kind of dataset where a scorecard is most valuable, because every accept-or-reject decision really matters.
 
-**[Point at the page subtitle: “Autobinning on 500 historical clients”.]**
+**[Scroll down so the four “Default Rate by …” bar charts are visible.]**
 
-In MATLAB, we use the **Credit Scorecard Toolbox** and call a function called **autobinning**. Its job is to take each predictor — age, income, employment, housing — and **split clients into groups** in the smartest possible way: groups where the default rate inside each group is very different from the next group. Income, for example, isn't used as a raw number; it's used as **"is this client under $28k, between $28–32k, $32–35k, $35–41k,"** and so on.
+Now look at where the defaults are coming from. We split the 500 clients along each of our four predictors, and a very clear pattern appears every time.
 
-**[Point at the four cards at the top of the page — IV summary.]**
+**[Point at “Default Rate by Income Band”.]**
 
-Once the groups are formed, MATLAB computes a number called **Information Value — IV** — for each predictor. IV measures how much **separating power** a predictor carries. The higher the IV, the more useful that variable is for predicting default.
+**Income** is the strongest single signal in the entire dataset. Clients earning **under $30,000** default about **57%** of the time. Clients earning **over $50,000** default only **21%**. That's almost a threefold gap — and it tells us immediately that **income** is going to be the heavyweight in our scorecard.
 
-Reading from the cards:
+**[Point at “Default Rate by Age Group”.]**
 
-- **Income — IV 0.2355 — Strong** — our most powerful predictor.
-- **Age — IV 0.1879 — Medium**.
-- **EmploymentStatus — IV 0.1143 — Medium**.
-- **ResidentialStatus — IV 0.0417 — Weak**, but still useful when combined.
+**Age** tells a similar story. Clients under 35 default **50%** of the time. Clients above 65 only **17%**. There's a smooth, monotonic decline as people get older — older clients in this dataset are simply more reliable borrowers.
 
-**[Pause for 2 seconds. Mention this business insight clearly.]**
+**[Point at the residential and employment charts.]**
 
-The bank now knows, *before* the model is even fitted, which questions matter most on a loan application form. Income matters more than housing status. That's already a useful business finding.
-
-**[Scroll to the main WOE chart — Income should be the default selected predictor.]**
-
-The big chart in the middle shows **Weight of Evidence — WOE — for income**. Each bar is one bin. **Green bars above the zero line** mean that bin is **safer than the portfolio average**. **Red bars below zero** mean **riskier than average**.
-
-**[Trace the bars from left to right.]**
-
-You can see it almost perfectly. Clients earning **under $28k** sit deep in the red — WOE of about **−0.98**, the riskiest bin. Then risk decreases as income increases. By the time we reach **$50k+** the WOE is **+0.72** — clearly safer. That smooth shape — bad to good — is what the logistic regression will use.
-
-**[Click the “Age” tab above the chart.]**
-
-Same idea for **age**. Under 38 — red. Above 49 — strongly green, WOE around **+0.54**. Older clients in our data behave better.
-
-**[Click “EmploymentStatus” and then “ResidentialStatus”.]**
-
-For employment, **Employed** is green, **Other** is red — a clean split. For residential status, **HomeOwner** is green, **renter** is red, but smaller in magnitude — which matches its low IV.
-
-**[Scroll down to the four predictor cards with bin tables.]**
-
-Each predictor has a small table — bin, number of clients, percentage of defaults, and the WOE — exactly the values published in **Table 8 and 9 of our report**.
+**Renters** default at **40%** versus homeowners at **31%**. And on employment — clients labelled "**Other**" — the unemployed or self-employed — default at **44%**, against **28%** for fully employed clients.
 
 **[Pause. Look at the audience.]**
 
-OK — so WOE turns categorical information into numbers the regression can use. Let's see what comes out the other end.
+So here's what's important: we're not inventing relationships out of thin air. The data itself is shouting at us — *people with low income, who are young, who rent, and who aren't formally employed are at much higher risk of default.* The model's job is just to put numbers on what we already see visually, and combine the four signals into a single, comparable score.
+
+**[Scroll down to the “MATLAB Workflow Pipeline” strip — do NOT read every step word-for-word.]**
+
+The pipeline behind everything you'll see today is shown here. In one sentence: we **load the data**, let MATLAB **group clients into risk buckets**, fit a **logistic regression**, **rescale into a 0–100 score**, **validate** on the same historical sample, and finally **apply the model to 20 new applicants** to make accept-reject decisions, calculate expected losses, and price each loan.
+
+**[Mention this business insight clearly.]**
+
+One last point before I hand over: the second sheet in our Excel file is called **ActualPortfolioData** — **20 brand-new applicants** the bank wants to evaluate. We don't know yet whether they'll default or not, because they haven't borrowed yet. That's the entire point of the model — to **predict** how they will behave, based on what we learned from the 500.
+
+So we have **500 labelled past clients** and **20 unknown future clients**. The next stage is to translate those four features into a credit score.
+
+> **Transition →** *"Now let's see how MATLAB groups the data and builds the actual scorecard."*
+
+---
+
+# Speaker 3 — Binning, Weight of Evidence, Information Value & Scorecard build
+
+**Time:** 5:00 · **Pages:** Slide 2 — **WOE & Binning (`/woe`)** then Slide 3 — **Scorecard (`/scorecard`)**
+
+**[Click step 2 in the sidebar — WOE & Binning. Wait for the page to load.]**
+
+We're now on **Slide 2 — WOE and Binning Analysis**. This is where the abstract data starts to take the shape of a scorecard.
+
+**[Point at the page subtitle: "Autobinning on 500 historical clients".]**
+
+The first step in MATLAB uses a function called **autobinning** from the Credit Scorecard Toolbox. Its job is to take each of our four predictors and **split clients into groups** in the smartest possible way — groups where the default rate inside one group is meaningfully different from the next group. Instead of using income as a raw dollar amount, the model uses it as **"is this client under $28,000, between $28 and $32k, $32 to $35k,"** and so on. That makes the model robust to outliers and easier to explain.
+
+**[Point at the four IV cards at the top of the page.]**
+
+Once the bins are formed, MATLAB calculates a number called **Information Value, or IV**, for each predictor. IV measures how much **separating power** a variable carries — the higher the IV, the more useful it is for predicting default.
+
+Reading off the cards:
+
+- **Income — IV equals 0.2355 — Strong** — our most powerful predictor.
+- **Age — IV 0.1879 — Medium.**
+- **Employment status — IV 0.1143 — Medium.**
+- **Residential status — IV 0.0417 — Weak**, but still useful when combined with the others.
+
+**[Pause for 2 seconds. Mention this business insight clearly.]**
+
+The bank already learns something useful *before* we fit a single equation. Income matters more than housing. Employment matters more than housing. If the bank ever has to drop questions from its application form to speed things up, it now knows which ones it absolutely cannot cut.
+
+**[Scroll to the main WOE chart — Income should already be selected.]**
+
+The large chart below the cards shows **Weight of Evidence — WOE — for income**. Each bar is one income bin. **Green bars above the zero line** mean that bin is **safer than the portfolio average**. **Red bars below zero** mean **riskier than average**.
+
+**[Trace the bars from left to right with the cursor.]**
+
+The shape is almost perfect. Clients earning **under $28,000** sit deep in the red — a WOE of **−0.98**, the riskiest bin in the entire dataset. As income climbs, risk decreases smoothly, and by the time we reach **$50,000-plus** the WOE is **+0.72** — clearly safer than average. That smooth, monotonic curve from risky to safe is exactly what a logistic regression loves.
+
+**[Click the "Age" tab above the chart.]**
+
+Same story for **age**. Under 38 — red. Above 49 — strongly green, WOE around **+0.54**.
+
+**[Click "EmploymentStatus" then "ResidentialStatus".]**
+
+For employment, **Employed** is green, **Other** is red — a clean two-way split. For housing, **HomeOwner** is green, **renter** is red, but the gap is smaller, which matches its low IV.
+
+**[Scroll down to the four predictor cards with bin tables.]**
+
+Each card has a small table — the bin, the number of clients in it, the default percentage, and the WOE. These are exactly the values you'll find in **Tables 8 and 9 of our written report**.
 
 **[Click step 3 in the sidebar — Scorecard.]**
 
 We're now on **Slide 3 — Credit Scorecard Points**.
 
-**[Point at the four charts on the page — one per predictor.]**
+**[Point at the four bar charts on the page.]**
 
-After WOE, MATLAB fits a **logistic regression** on all four predictors using `fitmodel`, and then calls `formatpoints` to **rescale everything into a 0–100 score**. The four charts on this page show how many **points** each bin contributes.
+After WOE, MATLAB fits a **logistic regression** on all four predictors using the function `fitmodel`, and then calls `formatpoints` to **rescale everything into the 0-to-100 range** we want to show clients. The four charts here display the **points** each bin contributes.
 
 **[Point at the Income chart.]**
 
-Income, again, dominates: the **lowest** bin contributes **−8.68 points**, the **highest** contributes **+28.91 points**. That's a swing of almost **38 points** just from income alone.
+**Income** dominates again — the **lowest** bin contributes **minus 8.68 points**, the **highest** contributes **plus 28.91 points**. That's a swing of nearly **38 points** from income alone.
 
 **[Point at the EmploymentStatus chart.]**
 
-Employment is also strong — **Employed** adds **+25.12 points**, **Other** only **+1.80**.
+**Employment** is the second strongest — Employed adds **+25.12**, Other only **+1.80**.
 
-**[Point at the ResidentialStatus chart.]**
+**[Point at the ResidentialStatus and Age charts.]**
 
-Housing adds **+21.10** for owners, **+6.71** for renters.
-
-**[Point at the Age chart.]**
-
-Age adds from **+0.17** for the youngest bin up to **+24.87** for the oldest.
+**Housing** adds **+21.10** for owners versus **+6.71** for renters. And **age** adds from **+0.17** for the youngest bin all the way up to **+24.87** for the oldest.
 
 **[Emphasize this result.]**
 
-So a client's **final credit score** is just: their **age points + income points + housing points + employment points**, clamped to **0–100**. Higher score → lower risk. That's the whole scorecard, on one page, end to end.
+So a client's **final credit score** is just the sum: **age points plus income points plus housing points plus employment points**, clamped to 0–100. Higher score means lower risk. That's the entire scorecard — transparent, additive, and reproducible. The model is built. Now the question is: **does it actually work?**
 
-**[Pause for 2 seconds.]**
-
-The model is built. Now the question is: **does it actually work?** That's what my colleague will show next.
-
-> **Transition →** “Let's validate the model on the historical data and find the right cutoff.”
+> **Transition →** *"Let's validate the model on the historical data and find the right cutoff."*
 
 ---
 
-# Speaker 4 — Validation (ROC, KS) + Portfolio scoring (PD)
+# Speaker 4 — Model validation (ROC, KS) and portfolio scoring (PD)
 
-**Time:** ~4–5 minutes · **Pages:** Slide 4 — **ROC & Validation (`/validation`)** then Slide 5 — **Portfolio Risk (`/portfolio`)**
+**Time:** 5:00 · **Pages:** Slide 4 — **ROC & Validation (`/validation`)** then Slide 5 — **Portfolio Risk (`/portfolio`)**
 
 **[Click step 4 in the sidebar — ROC & Validation.]**
 
-We're now on **Slide 4 — ROC Curve & Validation Metrics**. This page answers the question my teammate just asked: **how good is the scorecard?**
+We're now on **Slide 4 — ROC Curve and Validation Metrics**. This page answers the question my teammate just left hanging: **how well does the scorecard actually work?**
 
 **[Point at the four metric cards at the top.]**
 
-We applied the function `validatemodel` to the **same 500 historical clients** — and the dashboard shows the four official numbers from **Table 13 of our report**:
+We applied the MATLAB function `validatemodel` to the **same 500 historical clients**, and the dashboard shows the four official numbers — straight from **Table 13 of our report**:
 
-- **AUC = 0.6775**
-- **KS Statistic = 0.2892**
-- **KS Optimal Score = 48.2032**
-- **Accuracy Ratio = 0.3551**
+- **AUC equals 0.6775**
+- **KS Statistic equals 0.2892**
+- **KS Optimal Score equals 48.2032**
+- **Accuracy Ratio equals 0.3551**
 
-Let me unpack these one at a time.
+Let me unpack what each of these actually means in plain English.
 
 **[Point at the ROC curve chart on the left. Trace the teal curve with the cursor.]**
 
-The **ROC curve** plots, at every possible cutoff score, how many bad clients we'd catch versus how many good clients we'd wrongly reject. The **teal line is our model**. The **dashed grey diagonal is what you'd get from random guessing**.
+The **ROC curve** is the most important graph in the entire project. On the x-axis we have the **False Positive Rate** — the percentage of *good* clients we'd wrongly reject. On the y-axis we have the **True Positive Rate** — the percentage of *bad* clients we'd correctly catch. The **teal line is our model**. The **dashed grey diagonal is what you'd get from random guessing** — flipping a coin.
 
 **[Pause. Emphasize this result.]**
 
-Our curve sits **clearly above the diagonal** across every cutoff. That means at any acceptance threshold, our model catches more defaulters than chance — the model has **real predictive power**.
+Our curve sits **clearly above the diagonal across every single cutoff**. That means, no matter where we draw the line, our model catches **more defaulters than chance** while wrongly rejecting **fewer good clients than chance**. The model has **real predictive power**.
 
 **[Point at the AUC card.]**
 
-**AUC** — Area Under the Curve — is the area between the teal line and the bottom axis. An AUC of **0.6775** means: if you pick one defaulter and one non-defaulter at random from the historical data, **there's about a 68% chance our model gives the defaulter the lower score**. For a four-variable model on 500 records, that's a solid, defensible result.
+**AUC — Area Under the Curve** — is the area between the teal line and the bottom axis. **0.6775** means: if you pick one defaulter and one non-defaulter completely at random from the historical data, **there is roughly a 68% chance our model gives the defaulter the lower score**. For a four-variable model built on only 500 records, that is a solid, academically defensible result.
 
-**[Point at the KS card.]**
+**[Point at the KS card, then the KS Optimal Score card.]**
 
-**KS — Kolmogorov–Smirnov** — measures the **biggest gap** between the score distribution of good clients and bad clients. Our KS is **0.2892**, and crucially, it happens at the score value **48.2032** — that's the **KS Optimal Score** card.
-
-**[Point at the KS Optimal Score card.]**
-
-This number — **48.2032** — is the **single most important decision in the entire project**. It is the **acceptance threshold**. We're not picking it from intuition; the data itself tells us this is the score where good and bad clients are most cleanly separated.
+**KS — the Kolmogorov–Smirnov statistic** — measures the **biggest gap** between the score distributions of good clients and bad clients. Our KS equals **0.2892**, and — this is the key — that maximum gap occurs at score value **48.2032**. That number — **48.2032** — is the **single most important decision in the whole project**. It is our **acceptance threshold**, and we did not pick it from intuition. The data itself tells us this is the precise score at which good and bad clients are most cleanly separated.
 
 **[Read the rule slowly. Emphasize each word.]**
 
-> **Accept if the credit score is ≥ 48.2032. Reject otherwise.**
+> **Accept if the credit score is greater than or equal to 48.2032. Reject otherwise.**
 
-**[Point at the “Validation Summary” panel on the right.]**
+**[Point at the "Validation Summary" panel on the right, then pause.]**
 
-The panel on the right is just a clean restate of the same numbers, plus a note that we deliberately train and validate on the same 500 historical clients — that's the methodology required by our project brief.
-
-**[Pause. Look at the audience.]**
-
-Now we have a working scorecard and a clear rule. Let's apply it.
+Right — we now have a working scorecard and a clear, data-driven rule. Time to apply it.
 
 **[Click step 5 in the sidebar — Portfolio Risk.]**
 
-We're now on **Slide 5 — Portfolio Scoring**. This is the moment we move from past data to the **20 real applicants** the bank wants us to evaluate — the `ActualPortfolioData` sheet.
+We're now on **Slide 5 — Portfolio Scoring**. This is the moment we leave the past behind and apply the model to the **20 real applicants** from the `ActualPortfolioData` sheet.
 
 **[Point at the scatter chart.]**
 
-Each dot is one of the 20 applicants. The **x-axis is their credit score**, the **y-axis is their Probability of Default — PD** — calculated by `probdefault` in MATLAB.
+Every dot on this chart is one of the 20 applicants. The **x-axis is their credit score**. The **y-axis is their Probability of Default — PD** — calculated by the MATLAB function `probdefault`.
 
 **[Point at the red dashed vertical line at 48.2032.]**
 
-This red dashed line is the **cutoff at 48.2032** — exactly the KS optimal score we just saw. Everything to the right gets a loan, everything to the left is rejected.
+This red dashed vertical line is the **cutoff at 48.2032** — the exact KS optimal score we just discussed. Everything to the **right** of the line gets a loan. Everything to the **left** is rejected.
 
 **[Point at the cloud of dots — green vs red.]**
 
-**Green dots = Accepted**, **red dots = Rejected**. And notice the shape — the dots fall **from upper-left to lower-right**. **Higher score → lower PD**. That monotonic relationship is exactly what you want from a credit scorecard: a higher score consistently means a safer client.
+**Green dots are accepted, red dots are rejected**. And notice the overall shape: the points fall consistently from upper-left to lower-right. **Higher score → lower PD**, with no exceptions. That **monotonic relationship** is exactly what you want from a sound credit scorecard.
 
-**[Hover over a green dot near the top of the green cluster — Client 4 with score 100.]**
+**[Hover over a green dot at the top of the green cluster — Client 4 at score 100.]**
 
-The two safest clients have a perfect **score of 100** and a PD of just **12.79%**.
+Our two safest applicants — clients **4 and 5** — have a perfect score of **100** and a PD of just **12.79%**.
 
-**[Hover over the lowest red dot — Client 1.]**
+**[Hover over the lowest red dot — Client 1 at score 0.]**
 
-The riskiest applicant has a **score of 0** and a PD of **70.59%**. That's a client where 7 out of 10 simulations end in default — clearly not someone we want on the books.
+The riskiest applicant — Client 1 — has a **score of 0** and a PD of **70.59%**. Seven out of ten simulations on this client end in default.
 
-**[Scroll down to the “Risk band segmentation” cards.]**
+**[Scroll to the “Risk band segmentation” cards.]**
 
-We also segment all 20 applicants into **three risk bands** for monitoring:
+We also tier all 20 applicants into **three risk bands**: **5 Low Risk, 9 Medium Risk, 6 High Risk** — and notice that all six in the high-risk band are exactly the six we rejected. The bands now give the bank a monitoring framework: low-risk clients get standard treatment; medium-risk clients get tighter limits; high-risk applicants don't get an offer at all.
 
-- **Low Risk** (score ≥ 80): **5 clients**
-- **Medium Risk** (50–80): **9 clients**
-- **High Risk** (below 50): **6 clients** — all six are the rejected ones.
-
-**[Pause for 2 seconds. Mention this business insight clearly.]**
-
-Just by sorting by score, we've already created **risk tiers** — the bank can now treat low-risk clients differently from medium-risk ones in terms of monitoring, communication, and pricing.
-
-**[Pause.]**
-
-We have scores. We have decisions. Now it's time to translate those into **dollars and cents**.
-
-> **Transition →** “Now let's turn these scores into actual business outcomes — who gets the loan, how much we could lose, and what we should charge them.”
+> **Transition →** *"Now let's turn these scores into actual business outcomes — who gets the loan, how much we could lose, and what we should charge them."*
 
 ---
 
-# Speaker 5 — Decisions, Expected Loss, Risk-Based Pricing
+# Speaker 5 — Decisions, Expected Loss & Risk-Based Pricing
 
-**Time:** ~4–5 minutes · **Pages:** Slide 6 — **Decisions (`/decisions`)**, Slide 7 — **Expected Loss (`/expected-loss`)**, Slide 8 — **Pricing (`/pricing`)**
+**Time:** 5:00 · **Pages:** Slide 6 — **Decisions (`/decisions`)**, Slide 7 — **Expected Loss (`/expected-loss`)**, Slide 8 — **Pricing (`/pricing`)**
 
 **[Click step 6 in the sidebar — Accept / Reject.]**
 
-We're now on **Slide 6 — Accepted vs Rejected Clients**. This page operationalizes the cutoff we just saw.
+We're now on **Slide 6 — Accepted versus Rejected Clients**. This page **operationalises** the cutoff we just defined.
 
-**[Point at the “Decision Breakdown” bar chart on the left.]**
+**[Point at the "Decision Breakdown" bar chart on the left.]**
 
-The headline: out of 20 applicants — applying the rule **score ≥ 48.2032** — we get **14 accepted** and **6 rejected**. That's a **70% acceptance rate**.
+The headline: applying the rule **score ≥ 48.2032** to all 20 applicants gives us **14 accepted** and **6 rejected** — a **70% acceptance rate**.
 
-**[Point at the “Client Scores vs Threshold” bar chart on the right.]**
+**[Point at the "Client Scores vs Threshold" bar chart on the right.]**
 
-This chart shows every client sorted by score. **Green bars are accepted**, **red bars are rejected**, and the **red dashed line at 48.20 is the cutoff**.
+This chart sorts every client by score. **Green bars are accepted, red bars are rejected**, and the **dashed red line at 48.20 is the cutoff**.
 
-**[Point to the rightmost green bars — clients 4 and 5.]**
+**[Point at the rightmost green bars — Clients 4 and 5.]**
 
-On the safe end you've got clients **4 and 5** with the maximum **score of 100**.
+On the safe end you can see clients **4 and 5** with the maximum **score of 100**.
 
-**[Point at the borderline green bar — client 8 at ~55.84.]**
+**[Point at the borderline green bar — Client 8 at 55.84.]**
 
-This green bar here, hovering just above the cutoff, is **Client 8 at score 55.84**. He's a borderline case — we accept him, but he's our most risky accepted client.
+And right at the cutoff — barely above the red line — is **Client 8 at score 55.84**. He's our most borderline accepted client — barely safe enough.
 
-**[Point at the leftmost red bar.]**
+**[Point at the leftmost red bar — Client 1.]**
 
-And at the bottom, **Client 1 with a score of 0** — clearly out.
+At the very bottom, Client 1 with a score of **0** — clearly out.
 
 **[Scroll down to the “Portfolio results table”.]**
 
-Now the **full table** — this matches **Table 15 of our report**, one row per client.
+Now the full table — this is exactly **Table 15 of our report**, one row per client.
 
 **[Point at the column headers.]**
 
-For every client we see their **ID**, **score**, **PD**, **decision**, **risk band**, and **expected loss in dollars**.
+For every client we have **ID, score, PD, decision, risk band, and expected loss in dollars**.
 
-**[Point at row for Client 4.]**
+**[Point at Client 4's row, then Client 1's row, then Client 8's.]**
 
-Client 4: score **100**, PD **12.79%**, **Accepted**, **Low Risk**, expected loss **$5,114** — that's the cheapest, safest client in the portfolio.
+Three examples that tell the story:
 
-**[Point at row for Client 1.]**
-
-Client 1: score **0**, PD **70.59%**, **Rejected**, **High Risk**, would have cost us **$28,234** in expected loss — exactly why we don't lend to him.
-
-**[Point at row for Client 8.]**
-
-And our borderline accepted client — Client 8: score **55.84**, PD **33.50%**, expected loss **$13,402**. He's accepted, but he's the most expensive client we say yes to.
+- **Client 4** — score 100, PD 12.79%, accepted, Low Risk, expected loss **$5,114**. The cheapest, safest client.
+- **Client 1** — score 0, PD 70.59%, rejected, High Risk, would have cost **$28,234** in expected loss. The clearest reject.
+- **Client 8** — score 55.84, PD 33.50%, accepted, Medium Risk, expected loss **$13,402**. He's accepted, but he's the most expensive client we say yes to.
 
 **[Pause for 2 seconds. Mention this business insight clearly.]**
 
-The point isn't just "yes or no" — the dashboard is already telling the bank **which** accepted clients are riskier and need extra attention.
+So we're not just answering yes or no — the dashboard already tells the bank *which* of the accepted clients deserve closer monitoring.
 
 **[Click step 7 in the sidebar — Expected Loss.]**
 
-We're now on **Slide 7 — Expected Loss Dashboard**. This page rolls up the dollar impact.
-
-**[Point at the page subtitle showing the formula.]**
-
-The formula at the top: **Expected Loss = PD × LGD × Exposure**. Plain English: how likely they are to default, times how much we lose per dollar lent — **40%** — times the loan amount — **$100,000**.
-
-**[Point at the three metric cards.]**
-
-For the **14 accepted clients**:
-
-- **Total Expected Loss: $129,329.63**
-- **Average PD: 23.09%**
-- **Accepted Exposure: $1,400,000**
-
-**[Emphasize this result.]**
-
-This **$129,329.63** is the centerpiece of our results — it matches **Table 16 of the report**. It's the dollar amount the bank should be ready to absorb on this $1.4 million book, assuming a 60% recovery rate.
-
-**[Point at the “Expected Loss per Accepted Client” bar chart.]**
-
-The bar chart underneath shows the **per-client expected loss**. Taller bars mean **more capital at risk on that single client**.
-
-**[Point at the tallest bar — Client 8 at ~$13,400.]**
-
-The tallest bar is — unsurprisingly — **Client 8, around $13,400**. He's accepted because his score clears 48.20, but he's individually our largest loss exposure.
-
-**[Point at the shortest bars on the left — clients 4 and 5 at ~$5,100.]**
-
-The shortest bars are clients 4 and 5 at about **$5,100** each.
-
-**[Pause. Mention this business insight clearly.]**
-
-The same loan size produces a very different expected loss depending on the borrower. That's what justifies the next step — **charging different interest rates to different clients**.
-
-**[Click step 8 in the sidebar — Risk Pricing.]**
-
-We're now on **Slide 8 — Risk-Based Interest Rate Pricing**.
+This is **Slide 7 — Expected Loss Dashboard**, where we roll the per-client losses into a single portfolio number.
 
 **[Point at the formula in the subtitle.]**
 
-The formula: **Minimum interest rate = PD × LGD**. In simple terms, the rate has to at least cover the expected loss on that specific loan — otherwise the bank is lending at a guaranteed loss.
+The formula on top: **Expected Loss equals PD times LGD times Exposure**. In plain English: how likely they are to default, times how much we lose per dollar if they do — **40%** — times the loan size — **$100,000**.
 
-**[Point at the bar chart — clients sorted by rate.]**
+**[Point at the three metric cards.]**
 
-Every bar is one client's minimum break-even rate, sorted from lowest to highest. **Green = accepted**, **red = rejected**.
+For the **14 accepted clients**, the system computes: **total Expected Loss $129,329.63**, **average PD 23.09%**, **accepted exposure $1,400,000**.
 
-**[Point at the gold dashed “Avg” line.]**
+**[Emphasize this result.]**
 
-The gold dashed line is the **average minimum rate across the 14 accepted clients — 9.24%**.
+This **$129,329.63** is the centrepiece of our results. It matches **Table 16** of the report and represents the dollar amount the bank should be ready to absorb on this $1.4 million loan book, assuming 60% recovery on defaults.
 
-**[Point at the leftmost green bars.]**
+**[Point at the “Expected Loss per Accepted Client” bar chart, then the tallest bar — Client 8.]**
 
-The safest clients — clients **4 and 5** — only need **5.11%** to break even. That's the cheapest credit the bank can responsibly offer.
+The bar chart underneath shows where the loss is concentrated. The tallest bar is — unsurprisingly — **Client 8, around $13,400**. He's accepted, but he is individually the largest single exposure.
 
-**[Point at the rightmost green bar.]**
+**[Point at the shortest bars — clients 4 and 5.]**
 
-Our borderline client — **Client 8 — needs 13.40%**. Still acceptable, but priced much higher to reflect the risk.
+The shortest bars are clients 4 and 5 at roughly **$5,100** each. Same loan size, very different expected loss — which is exactly what justifies the next step: **charging them different interest rates**.
+
+**[Click step 8 in the sidebar — Risk Pricing.]**
+
+This is **Slide 8 — Risk-Based Interest Rate Pricing**.
+
+**[Point at the formula in the subtitle.]**
+
+The pricing formula from our project brief: **minimum interest rate equals PD times LGD**. The rate has to **at least** cover the expected loss on that specific loan — otherwise the bank is lending at a guaranteed loss.
+
+**[Point at the bar chart and the gold dashed Avg line.]**
+
+Each bar is one client's minimum break-even rate, sorted from lowest to highest. Green is accepted, red is rejected. The gold dashed line is the **portfolio average across the 14 accepted clients — 9.24%**.
+
+**[Point at the leftmost green bars, then the rightmost.]**
+
+The safest clients — **4 and 5** — only need **5.11%** to break even. Our borderline client **8** needs **13.40%**. Still acceptable, but priced much higher to reflect the risk he carries.
 
 **[Point at the two summary boxes below.]**
 
-The two boxes below the chart sum it up:
-
-- **Lowest accepted client rate: 5.11%**
-- **Highest rejected client rate: 28.23%** — that's Client 1, the score-zero applicant. To break even on him, we'd need to charge **28%** interest. No bank would lend at that rate to a consumer — it's unrealistic and unethical. That's exactly why he's rejected.
+The two boxes underneath compress the whole pricing story: **lowest accepted rate 5.11%**, **highest rejected rate 28.23%** — that's Client 1, the score-zero applicant. To break even on him we'd need **28%** interest, which no responsible bank would ever charge a consumer. That is precisely why we reject him.
 
 **[Pause for 2 seconds. Mention this business insight clearly.]**
 
-Risk-based pricing means: instead of charging everyone the same rate, the bank quotes a rate that **matches the risk of that specific person**. Safer clients pay less, riskier accepted clients pay more, and clearly-too-risky clients are not lent to at all.
+This is what risk-based pricing means in practice: safer clients pay less, riskier clients pay more, and applicants who'd need an unethical rate to break even simply don't get a loan. Same scorecard, three completely different commercial outcomes.
 
-**[Pause.]**
-
-That's the full picture in dollars. My colleague will now bring everything together, show the final portfolio, and run a live test on the model.
-
-> **Transition →** “Let's see the consolidated results, the final approved portfolio, and a live demo of the scorecard in action.”
+> **Transition →** *"Let's see the consolidated performance, the final portfolio, and a live demo of the scorecard in action."*
 
 ---
 
-# Speaker 6 — Model performance, final portfolio, live demo & conclusion
+# Speaker 6 — Performance, Final Portfolio, Live Demo & Conclusion
 
-**Time:** ~4–5 minutes · **Pages:** Slide 9 — **Performance (`/performance`)**, Slide 10 — **Final (`/final`)**, Slide 11 — **Test (`/test`)**
+**Time:** 5:00 · **Pages:** Slide 9 — **Performance (`/performance`)**, Slide 10 — **Final (`/final`)**, Slide 11 — **Test (`/test`)**
 
 **[Click step 9 in the sidebar — Model Performance.]**
 
-We're now on **Slide 9 — Model Performance Summary**. This page is a one-screen recap of the whole project.
+We're now on **Slide 9 — Model Performance Summary**. This page is a single-screen recap of the entire project.
 
-**[Point at the “Validation Radar” chart on the left.]**
+**[Point at the Validation Radar on the left.]**
 
-The radar chart on the left visualizes our three validation metrics — **AUC**, **KS**, and **Accuracy Ratio** — all converted to percentages. The shape extends well beyond the centre, which means the model has consistent, balanced predictive power, not a single lucky number.
+The radar on the left visualises our three validation metrics — **AUC, KS, and Accuracy Ratio** — all converted to percentages. The shape extends well beyond the centre, which tells us the model has **consistent, balanced predictive power** — not one lucky number.
 
 **[Point at the “Project Outcomes” list on the right.]**
 
-The list on the right is the **executive summary**. Reading top to bottom:
-
-- **500** historical observations
-- **36%** historical default rate
-- **AUC of 0.6775** on historical data
-- **14 out of 20** portfolio clients accepted
-- **70%** acceptance rate
-- **23.09%** average PD on the accepted book
+The list on the right is the **executive summary**: 500 historical observations, 36% historical default rate, AUC 0.6775, 14 of 20 portfolio clients accepted, 70% acceptance rate, 23.09% average PD on the accepted book.
 
 **[Mention this business insight clearly.]**
 
-In other words — we moved from a historical default rate of **36%** down to an expected default rate of **23%** on the accepted book. That's the **value-add of using a credit scorecard**.
-
-**[Scroll down briefly — the accept/reject and risk band charts here are recap charts. Skim them.]**
-
-The two charts at the bottom — accepted vs rejected and risk band distribution — are just a visual recap of what we saw earlier. We'll go straight to the final view.
+The most important number on this page is the gap between **36% and 23%** — that's the **lift from using a scorecard**. We've moved the expected default rate from the full historical mix of **36% down to 23.09%** on the clients we'd actually book. That's the business value of credit-risk modelling, expressed in a single sentence.
 
 **[Click step 10 in the sidebar — Final Decision.]**
 
-This is **Slide 10 — Final Portfolio Decision**.
+This is **Slide 10 — Final Portfolio Decision**. If we were standing in front of a real credit committee, this page is what we'd ask them to sign off on.
 
-**[Point at the gradient banner at the top — “14 Clients · $1.4M”.]**
+**[Point at the gradient banner at the top — "14 Clients · $1.4M".]**
 
-The big banner is the **final approved portfolio**:
+The banner at the top is our final approved portfolio: **14 clients approved, $1.4 million in exposure, $129,329.63 of total expected loss, average PD 23.09%, average minimum interest rate 9.24%, and 6 clients rejected**.
 
-- **14 clients approved**
-- **$1.4 million in exposure**
-- **$129,329.63 total expected loss**
-- **Average PD 23.09%**, **average minimum interest rate 9.24%**
-- **6 clients rejected**
+**[Point at the two columns underneath — Accepted on the left, Rejected on the right.]**
 
-**[Point at the two columns below — Accepted on the left, Rejected on the right.]**
-
-The two columns underneath show every client by ID, with their score and PD. On the left, **14 accepted clients**, all sorted by score. On the right, **6 rejected clients** — all with scores below 48.
+The two columns underneath list every client by ID, with their score and PD. The 14 on the left are accepted, sorted by score; the 6 on the right are rejected — all with scores below 48.
 
 **[Pause for 2 seconds. Look at the audience.]**
 
-This is the deliverable. If we were presenting this to a credit committee, this page is what they'd sign off on. Now let's prove the scorecard actually works **live**.
+This is the **deliverable**. Now let's prove the scorecard works **live**, not just in a static table.
 
 **[Click step 11 in the sidebar — Live Client Test.]**
 
-This is **Slide 11 — Live Client Test**. Here you can pick **any one of the 20 applicants**, run the scorecard, and see the exact result the bank would get in production.
+This is **Slide 11 — Live Client Test**. You can pick any one of the 20 applicants — or even build a custom profile — and the system runs the full scorecard in real time.
 
-**[Open the dropdown at the top — "Quick select (MATLAB portfolio)" — and pick "Client #4 — Score 100 (Accepted)".]**
+**[Open the dropdown. Pick "Client #4 — Score 100 (Accepted)".]**
 
-Let's start with our safest applicant — **Client 4**. As soon as we select him, the applicant profile fills in on the left: **age 50, income $54,000, homeowner, employed**.
+Let's start with our safest applicant — **Client 4**. The profile fills in instantly: **age 50, income $54,000, homeowner, employed**.
 
-**[Point at the “Scorecard point breakdown” table on the right.]**
+**[Point at the "Scorecard point breakdown" table on the right.]**
 
-You can see his **point breakdown live** — Age **+24.87**, Income **+23.84**, Housing **+21.10**, Employment **+25.12**. They add up to **94.94**, capped at **100**.
+You can see his point breakdown live — Age +24.87, Income +23.84, Housing +21.10, Employment +25.12 — adding up to **94.94, capped at 100**.
 
-**[Click the teal “Run credit test” button. Wait for the animation.]**
+**[Click the teal "Run credit test" button.]**
 
-Now we click **Run credit test** — the dashboard simulates the MATLAB pipeline. Score gauge animates…
+Now we click **Run credit test** — the dashboard runs the MATLAB pipeline, the gauge animates… and we get the result: **Score 100, PD 12.79%, Accepted, Low Risk, Expected Loss $5,114, Minimum Rate 5.11%**. **Exactly** the numbers in Table 15 of our report.
 
-**[Once result appears, point at the gauge and the four cards.]**
+**[Open the dropdown again. Pick "Client #1 — Score 0.0 (Rejected)". Click Run credit test.]**
 
-…and the result: **Score 100**, **PD 12.79%**, **Accepted**, **Low Risk**, **Expected Loss $5,114**, **Minimum Rate 5.11%**. **Exactly** the numbers from Table 15 of our report.
+Now the opposite — **Client 1**. Score **0**, PD **70.59%**, **Rejected, High Risk**, expected loss **$28,234**, minimum rate **28.23%**. Same scorecard, opposite outcome — the model doing exactly what it should.
 
-**[Open the dropdown again, pick "Client #1 — Score 0.0 (Rejected)". Click Run credit test.]**
+**[Pause briefly. Mention this business insight clearly.]**
 
-For comparison, let's try **Client 1** — the worst applicant. Score **0**, PD **70.59%**, **Rejected**, **High Risk**, expected loss **$28,234**, rate **28.23%**. Same scorecard, opposite outcome — that's the model doing exactly what it's supposed to do.
-
-**[Optional — say only if time allows: change Client 1's income to $80,000 and re-run.]**
-
-We can even play **"what if?"**: if we manually change Client 1's income from $21,000 to $80,000 and re-run, the score jumps and the decision flips — showing how sensitive credit risk is to income, which matches the IV we saw on Slide 2.
-
-**[Pause for 2 seconds. Mention this business insight clearly.]**
-
-In production, this is the exact tool a credit officer would use — type the applicant's profile, click one button, get a defensible decision in under a second.
+In production this is the exact tool a credit officer uses — type the applicant's profile, click one button, get a transparent, defensible decision in under a second, with every piece of the score visible.
 
 ---
 
-## Conclusion
+**[Step back from the screen. Speak slowly. Eye contact.]**
 
-**[Step back from the screen. Speak slowly. Eye contact with the audience.]**
-
-To wrap up — in this project we built a **complete AI-in-FinTech credit risk system**:
-
-1. We **learned from 500 past clients** using MATLAB's Credit Scorecard Toolbox.
-2. We **built a scorecard** from four simple predictors — age, income, housing, employment — and validated it with **AUC 0.6775** and **KS 0.2892**.
-3. We **applied it to 20 new applicants**, accepting **14** and rejecting **6** using the data-driven cutoff of **48.2032**.
-4. We **quantified the risk in dollars** — **$129,329.63** of expected loss on **$1.4 million** of exposure.
-5. We **priced every loan individually** — from **5.11%** for our safest clients to **13.40%** for the riskiest accepted ones.
-6. And finally, we built **RiskLens** — this dashboard — so that every decision is **traceable, explainable, and live**.
-
-**[Brief pause.]**
-
-The project shows that the value of AI in finance isn't replacing the credit officer — it's giving them a transparent, consistent, and defensible tool. Every accept, every reject, every interest rate on this dashboard ties back to **the same four facts on a loan application**.
+**To conclude.** We built a complete **AI-in-FinTech credit risk system** end to end — learning from **500 past clients**, validating with **AUC 0.6775**, accepting **14 of 20** new applicants at a data-driven cutoff of **48.2032**, with **$129,329.63** of expected loss on **$1.4 million** of exposure and rates from **5.11% to 13.40%**.
 
 **[Smile. Final eye contact.]**
 
-Thank you very much for your attention — we'd be happy to take your questions.
+The real point: AI in finance is not about replacing the credit officer — it's about giving them a transparent, defensible tool where every decision ties back to four facts on a single application form. Thank you for your attention — we'd be happy to take your questions.
 
 ---
 
@@ -560,13 +469,13 @@ Thank you very much for your attention — we'd be happy to take your questions.
 
 | Question | Suggested answer |
 |----------|------------------|
-| **Why train and validate on the same 500 clients?** | Project brief specifies this approach. With only 500 records, splitting train/test reduces sample size below what's reliable. |
-| **Is AUC 0.6775 “good”?** | For a 4-variable scorecard, yes — defensible academically. A production bank model uses 30–50 variables and aims for AUC > 0.75. |
-| **Where does 48.2032 come from?** | It's the score that maximizes the KS statistic — i.e. the **biggest separation** between good and bad clients on the historical data. |
-| **What's the difference between WOE and Points?** | WOE is a raw log-ratio per bin. Points are the **scaled, rounded version** of WOE × the regression coefficient, fitted to a 0–100 range. |
-| **Why is Client 8 accepted with a 13.40% rate?** | His score (55.84) is above 48.20, so the model accepts him. The high rate just reflects that he's our riskiest accepted client. |
-| **What happens if the economy changes?** | This is the main limitation — the model is trained on past data. In production, the bank would **monitor PD vs realized defaults** quarterly and recalibrate as needed. |
-| **Could this be improved with more data?** | Absolutely. Adding credit-bureau scores, debt-to-income ratios, transaction history, and employment tenure would lift AUC significantly. |
+| **Why train and validate on the same 500 clients?** | The project brief specifies this approach. With only 500 records, splitting reduces sample size below what's reliable. |
+| **Is AUC 0.6775 "good"?** | For a 4-variable scorecard, yes — defensible academically. A production bank model uses 30–50 variables and aims for AUC > 0.75. |
+| **Where does 48.2032 come from?** | It's the score that maximizes the KS statistic — the biggest separation between good and bad clients on the historical data. |
+| **What's the difference between WOE and Points?** | WOE is a raw log-ratio per bin. Points are WOE × regression coefficient, scaled to a 0–100 range. |
+| **Why is Client 8 accepted with a 13.40% rate?** | His score (55.84) is above 48.20, so the model accepts him. The high rate reflects that he's our riskiest accepted client. |
+| **What happens if the economy changes?** | This is the main limitation — the model is trained on past data. In production the bank would monitor PD vs realized defaults and recalibrate. |
+| **Could this be improved with more data?** | Absolutely. Adding credit-bureau scores, debt-to-income ratios, and transaction history would lift AUC significantly. |
 | **Where is the code?** | `matlab/FinTech_Scorecard_Project.m` and the `Final/` folder in the GitHub repository. |
 
 ---
@@ -575,23 +484,24 @@ Thank you very much for your attention — we'd be happy to take your questions.
 
 | # | Speaker | Pages | Key numbers to mention |
 |---|---------|-------|------------------------|
-| 1 | Intro & dashboard tour | Slide 1 | 500, 20, AUC 0.6775, 14 accepted, $1.4M, $129,329 |
-| 2 | Problem, data, methodology | Slide 1 | 36%, 320/180, 57% / 21%, $100k loan, LGD 40% |
+| 1 | Intro & dashboard tour | Slide 1 | 500, 20, AUC 0.6775, 14 accepted, $1.4M, $129,329, 48.2032, $100k loan, LGD 40% |
+| 2 | Problem, dataset, EDA | Slide 1 | 36%, 320/180, 57% / 21%, under-35 50%, renters 40%, Other 44% |
 | 3 | WOE & Scorecard | Slides 2–3 | IV: 0.2355 / 0.1879 / 0.1143 / 0.0417, points −8.68 to +28.91 |
 | 4 | Validation & Portfolio | Slides 4–5 | AUC 0.6775, KS 0.2892, cutoff 48.2032, 5 / 9 / 6 risk bands |
-| 5 | Decisions, EL, Pricing | Slides 6–8 | 14/6, $129,329.63, $1.4M, avg PD 23.09%, rates 5.11%–28.23% |
-| 6 | Performance, Final, Live demo | Slides 9–11 | 70% acceptance, Client 4 → 100/12.79%/$5,114, Client 1 → 0/70.59%/$28,234 |
+| 5 | Decisions, EL, Pricing | Slides 6–8 | 14/6, $129,329.63, $1.4M, avg PD 23.09%, rates 5.11% – 28.23%, avg 9.24% |
+| 6 | Performance, Final, Live demo | Slides 9–11 | 70% acceptance, 36% → 23%, Client 4 (100 / 12.79% / $5,114), Client 1 (0 / 70.59% / $28,234) |
 
 ---
 
 ## Rehearsal checklist
 
-- [ ] Dashboard running and loaded on Slide 1 before audience walks in
-- [ ] Every speaker has clicked through their own slides once
+- [ ] Dashboard running and loaded on Slide 1 before the audience walks in
+- [ ] Every speaker has clicked through their own slides at least once
 - [ ] Client Test page tested with both Client 4 and Client 1
 - [ ] Sidebar visible on the projection (not zoomed out)
 - [ ] Backup report PDF open on a second device
 - [ ] Internet not required — `npm run dev` runs locally
+- [ ] **Time each speaker once** in rehearsal — aim for 5:00, accept 4:30–5:30
 
 ---
 
