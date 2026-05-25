@@ -16,11 +16,13 @@ import { FinalPage } from './pages/FinalPage';
 import { OutputsLayout } from './components/layout/OutputsLayout';
 import { MatlabOutputsPage } from './pages/outputs/MatlabOutputsPage';
 import { ExcelOutputsPage } from './pages/outputs/ExcelOutputsPage';
+import { PresentationApp } from './presentation/PresentationApp';
 export default function App() {
   return (
     <ThemeProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/present" element={<PresentationApp />} />
           <Route path="/outputs" element={<OutputsLayout />}>
             <Route index element={<Navigate to="matlab" replace />} />
             <Route path="matlab" element={<MatlabOutputsPage />} />

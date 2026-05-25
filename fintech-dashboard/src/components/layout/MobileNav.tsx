@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Shield } from 'lucide-react';
+import { Menu, X, Shield, Presentation as PresentationIcon } from 'lucide-react';
 import clsx from 'clsx';
 import { PRESENTATION_NAV, SUPPLEMENTARY_NAV } from '../../config/presentationNav';
 
@@ -21,9 +21,19 @@ export function MobileNav() {
           <Shield className="text-teal-500" size={22} />
           <span className="font-display font-bold">RiskLens</span>
         </motion.div>
-        <button type="button" onClick={() => setOpen(!open)} aria-label="Menu">
-          {open ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="flex items-center gap-2">
+          <Link
+            to="/present"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-teal-500 to-teal-600 shadow-sm shadow-teal-500/25"
+            aria-label="Open presentation"
+          >
+            <PresentationIcon size={13} />
+            Present
+          </Link>
+          <button type="button" onClick={() => setOpen(!open)} aria-label="Menu">
+            {open ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </motion.div>
       <AnimatePresence>
         {open && (

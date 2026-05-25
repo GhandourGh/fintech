@@ -1,6 +1,6 @@
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Moon, Sun, Shield } from 'lucide-react';
+import { Moon, Sun, Shield, Presentation as PresentationIcon, ArrowUpRight } from 'lucide-react';
 import clsx from 'clsx';
 import { useTheme } from '../../context/ThemeContext';
 import { PROJECT_META } from '../../data/projectData';
@@ -89,10 +89,22 @@ export function Sidebar() {
         ))}
       </nav>
       <motion.div className="p-4 border-t border-[var(--border)] space-y-3">
+        <Link
+          to="/present"
+          className="group relative w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-400 hover:to-teal-500 shadow-md shadow-teal-500/25 transition-all overflow-hidden"
+          aria-label="Open presentation"
+        >
+          <PresentationIcon size={16} />
+          <span>Open Presentation</span>
+          <ArrowUpRight
+            size={14}
+            className="opacity-80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+          />
+        </Link>
         <button
           type="button"
           onClick={toggle}
-          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-[var(--border)] text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-teal-500/30 transition-colors"
+          className="w-full flex items-center justify-center gap-2 py-2 rounded-xl border border-[var(--border)] text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-teal-500/30 transition-colors"
           aria-label="Toggle theme"
         >
           {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}

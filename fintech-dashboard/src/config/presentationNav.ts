@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 export type PresentationNavItem = {
-  /** Presentation order (matches script.md slides) */
+  /** Presentation order (numbered sidebar) */
   step: number;
   to: string;
   /** Short label for sidebar */
